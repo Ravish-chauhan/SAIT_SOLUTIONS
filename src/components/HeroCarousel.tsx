@@ -90,8 +90,7 @@ export default function HeroCarousel() {
             backgroundImage: `url('${slide.imagePath}')`,
           }}
         >
-          {/* Semi-transparent tint on mobile screens only to guard contrast */}
-          <div className="absolute inset-0 bg-white/20 sm:bg-transparent z-0 pointer-events-none" />
+          {/* No overlay to keep slide images perfectly clear and bright */}
 
           <div className="max-w-7xl mx-auto px-4 md:px-8 w-full relative z-10">
             {/* Left Content (Constrained to max-w-[55%] on small screens to prevent overlapping products on the right) */}
