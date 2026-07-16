@@ -55,7 +55,7 @@ export default function CategoriesCarousel() {
   return (
     <div className="w-full">
       {/* 1. Promotional Highlights Grid (Three short banners in a row) */}
-      <section className="w-full max-w-[1500px] mx-auto px-3 md:px-4 py-12">
+      <section className="w-full max-w-[1500px] mx-auto px-3 md:px-4 pt-0 pb-10 md:py-12">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           
           {/* Banner Card 1 */}
@@ -87,6 +87,18 @@ export default function CategoriesCarousel() {
             <Image
               src="/short-banner03.png"
               alt="Promo Banner 3"
+              fill
+              className="object-cover"
+              sizes="(max-w-768px) 100vw, 380px"
+              priority
+            />
+          </Link>
+
+          {/* Banner Card 4 (Visible only on mobile to make it 2x2 grid, hidden on desktop/tablet where it is 1x3 grid) */}
+          <Link href="/category/pc-components" className="relative md:hidden aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
+            <Image
+              src="/short-banner04.png"
+              alt="Promo Banner 4"
               fill
               className="object-cover"
               sizes="(max-w-768px) 100vw, 380px"
