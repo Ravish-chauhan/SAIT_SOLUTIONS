@@ -54,99 +54,45 @@ export default function CategoriesCarousel() {
 
   return (
     <div className="w-full">
-      {/* 1. Promotional Highlights Grid (2-3 Cards Side-by-Side) */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* 1. Promotional Highlights Grid (Three short banners in a row) */}
+      <section className="w-full max-w-[1500px] mx-auto px-3 md:px-4 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           
-          {/* Promo Card 1: Exclusive Offers */}
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm group hover:shadow-md transition-all duration-300 flex flex-col">
-            <div className="relative w-full h-[200px] overflow-hidden bg-slate-50">
-              <Image
-                src="/offers_card_promo.png"
-                alt="Exclusive Hardware Offers"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                sizes="(max-w-768px) 100vw, 360px"
-              />
-            </div>
-            <div className="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-black tracking-widest text-accent uppercase bg-blue-50 px-2 py-0.5 rounded-full">
-                  Dealer Deals
-                </span>
-                <h3 className="text-lg font-black text-slate-800 mt-2.5 uppercase tracking-tight">
-                  Exclusive Offers
-                </h3>
-                <p className="text-xs text-slate-500 font-semibold leading-relaxed mt-2">
-                  Unlock special high-volume discounts and custom pricing tiers on premium components.
-                </p>
-              </div>
-              <Link href="/search?q=deal" className="inline-flex items-center text-xs font-black text-accent mt-5 group hover:text-blue-700 transition-colors">
-                <span>BROWSE DEALS</span>
-                <ChevronRight className="w-4 h-4 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </div>
-          </div>
+          {/* Banner Card 1 */}
+          <Link href="/category/peripherals" className="relative aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
+            <Image
+              src="/short-banner01.png"
+              alt="Promo Banner 1"
+              fill
+              className="object-cover"
+              sizes="(max-w-768px) 100vw, 380px"
+              priority
+            />
+          </Link>
 
-          {/* Promo Card 2: Premium Peripherals */}
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm group hover:shadow-md transition-all duration-300 flex flex-col">
-            <div className="relative w-full h-[200px] overflow-hidden bg-slate-50">
-              <Image
-                src="/peripherals_card_promo.png"
-                alt="High-End Peripherals"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                sizes="(max-w-768px) 100vw, 360px"
-              />
-            </div>
-            <div className="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-black tracking-widest text-accent uppercase bg-blue-50 px-2 py-0.5 rounded-full">
-                  Pro Accessories
-                </span>
-                <h3 className="text-lg font-black text-slate-800 mt-2.5 uppercase tracking-tight">
-                  Peripherals Showcase
-                </h3>
-                <p className="text-xs text-slate-500 font-semibold leading-relaxed mt-2">
-                  Upgrade your workspace with custom mechanical keyboards, wireless mice, and studio headphones.
-                </p>
-              </div>
-              <Link href="/category/peripherals" className="inline-flex items-center text-xs font-black text-accent mt-5 group hover:text-blue-700 transition-colors">
-                <span>EXPLORE GEAR</span>
-                <ChevronRight className="w-4 h-4 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </div>
-          </div>
+          {/* Banner Card 2 */}
+          <Link href="/category/monitors-display" className="relative aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
+            <Image
+              src="/short-banner02.png"
+              alt="Promo Banner 2"
+              fill
+              className="object-cover"
+              sizes="(max-w-768px) 100vw, 380px"
+              priority
+            />
+          </Link>
 
-          {/* Promo Card 3: Custom Builds */}
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm group hover:shadow-md transition-all duration-300 flex flex-col">
-            <div className="relative w-full h-[200px] overflow-hidden bg-slate-50">
-              <Image
-                src="/custom_pc_promo.png"
-                alt="Custom PC Builds"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                sizes="(max-w-768px) 100vw, 360px"
-              />
-            </div>
-            <div className="p-5 flex-1 flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-black tracking-widest text-accent uppercase bg-blue-50 px-2 py-0.5 rounded-full">
-                  Workstation Builds
-                </span>
-                <h3 className="text-lg font-black text-slate-800 mt-2.5 uppercase tracking-tight">
-                  Custom Rigs
-                </h3>
-                <p className="text-xs text-slate-500 font-semibold leading-relaxed mt-2">
-                  Custom engineered gaming machines and heavy-duty rendering setups tailored for professionals.
-                </p>
-              </div>
-              <Link href="/category/pc-components" className="inline-flex items-center text-xs font-black text-accent mt-5 group hover:text-blue-700 transition-colors">
-                <span>BUILD YOUR RIG</span>
-                <ChevronRight className="w-4 h-4 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </div>
-          </div>
+          {/* Banner Card 3 */}
+          <Link href="/category/peripherals" className="relative aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
+            <Image
+              src="/short-banner03.png"
+              alt="Promo Banner 3"
+              fill
+              className="object-cover"
+              sizes="(max-w-768px) 100vw, 380px"
+              priority
+            />
+          </Link>
 
         </div>
       </section>
