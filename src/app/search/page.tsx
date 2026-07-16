@@ -10,22 +10,26 @@ interface SearchPageProps {
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  await dbConnect();
-  
   const { q } = await searchParams;
   const query = q || '';
 
   let products: any[] = [];
-  if (query.trim()) {
-    products = await Product.find({
-      $or: [
-        { name: { $regex: query, $options: 'i' } },
-        { brand: { $regex: query, $options: 'i' } },
-        { description: { $regex: query, $options: 'i' } },
-      ],
-    })
-      .limit(20)
-      .lean();
+  
+  try {
+    await dbConnect();
+    if (query.trim()) {
+      products = await Product.find({
+        $or: [
+          { name: { $regex: query, $options: 'i' } },
+          { brand: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } },
+        ],
+      })
+        .limit(20)
+        .lean();
+    }
+  } catch (error) {
+    console.error("Database connection failed during search:", error);
   }
 
   const serializedProducts = JSON.parse(JSON.stringify(products));

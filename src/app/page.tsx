@@ -31,11 +31,24 @@ const getCategoryIcon = (slug: string) => {
 export const revalidate = 3600; // ISR: Revalidate page every hour
 
 export default async function HomePage() {
-  await dbConnect();
+  let parentCategories: any[] = [];
+  let trendingProducts: any[] = [];
 
-  // Fetch parent categories and trending products from the database
-  const parentCategories = await Category.find({ parent: null }).sort({ order: 1 }).lean();
-  const trendingProducts = await Product.find({ isTrending: true }).limit(8).lean();
+  try {
+    await dbConnect();
+    parentCategories = await Category.find({ parent: null }).sort({ order: 1 }).lean();
+    trendingProducts = await Product.find({ isTrending: true }).limit(8).lean();
+  } catch (error) {
+    console.error("Database connection failed during build or render. Using fallback data:", error);
+    parentCategories = [
+      { _id: 'fallback-pc-components', name: 'PC Components', slug: 'pc-components', order: 1, subcategories: [] },
+      { _id: 'fallback-storage-nas', name: 'Storage & NAS', slug: 'storage-nas', order: 2, subcategories: [] },
+      { _id: 'fallback-peripherals', name: 'Peripherals', slug: 'peripherals', order: 3, subcategories: [] },
+      { _id: 'fallback-monitors-display', name: 'Monitors & Projectors', slug: 'monitors-display', order: 4, subcategories: [] },
+      { _id: 'fallback-network-security', name: 'Network & Security', slug: 'network-security', order: 5, subcategories: [] },
+    ];
+    trendingProducts = [];
+  }
 
   // Serialize MongoDB documents for Client Components safely
   const serializedProducts = JSON.parse(JSON.stringify(trendingProducts));

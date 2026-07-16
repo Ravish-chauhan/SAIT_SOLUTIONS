@@ -15,38 +15,43 @@ interface SubcategoryPageProps {
 }
 
 export default async function SubcategoryPage({ params }: SubcategoryPageProps) {
-  await dbConnect();
-  
   const { subslug } = await params;
 
-  // 1. Find the target subcategory
-  const targetCategory = await Category.findOne({ slug: subslug }).lean();
-  if (!targetCategory || !targetCategory.parent) {
+  try {
+    await dbConnect();
+    
+    // 1. Find the target subcategory
+    const targetCategory = await Category.findOne({ slug: subslug }).lean();
+    if (!targetCategory || !targetCategory.parent) {
+      notFound();
+    }
+
+    // 2. Get the parent category
+    const parentCategory = await Category.findById(targetCategory.parent).lean();
+    if (!parentCategory) {
+      notFound();
+    }
+    
+    // 3. Get all subcategories under the same parent for the sidebar listing
+    const subcategories = await Category.find({ parent: parentCategory._id }).sort({ order: 1 }).lean();
+
+    // 4. Find products belonging to this subcategory
+    const products = await Product.find({ subcategory: targetCategory._id }).sort({ createdAt: -1 }).lean();
+
+    // Safely serialize database documents
+    const serializedProducts = JSON.parse(JSON.stringify(products));
+    const serializedSubcategories = JSON.parse(JSON.stringify(subcategories));
+
+    return (
+      <CategoryListingClient
+        categoryName={parentCategory.name}
+        subcategories={serializedSubcategories}
+        products={serializedProducts}
+        activeSubcategorySlug={targetCategory.slug}
+      />
+    );
+  } catch (error) {
+    console.error("Database connection failed during subcategory load:", error);
     notFound();
   }
-
-  // 2. Get the parent category
-  const parentCategory = await Category.findById(targetCategory.parent).lean();
-  if (!parentCategory) {
-    notFound();
-  }
-  
-  // 3. Get all subcategories under the same parent for the sidebar listing
-  const subcategories = await Category.find({ parent: parentCategory._id }).sort({ order: 1 }).lean();
-
-  // 4. Find products belonging to this subcategory
-  const products = await Product.find({ subcategory: targetCategory._id }).sort({ createdAt: -1 }).lean();
-
-  // Safely serialize database documents
-  const serializedProducts = JSON.parse(JSON.stringify(products));
-  const serializedSubcategories = JSON.parse(JSON.stringify(subcategories));
-
-  return (
-    <CategoryListingClient
-      categoryName={parentCategory.name}
-      subcategories={serializedSubcategories}
-      products={serializedProducts}
-      activeSubcategorySlug={targetCategory.slug}
-    />
-  );
 }

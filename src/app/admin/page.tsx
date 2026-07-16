@@ -18,22 +18,30 @@ export default async function AdminDashboard() {
     redirect('/admin/login');
   }
 
-  await dbConnect();
+  let products: any[] = [];
+  let enquiries: any[] = [];
+  let categories: any[] = [];
 
-  // Fetch all necessary data
-  const products = await Product.find({})
-    .populate('category', 'name')
-    .populate('subcategory', 'name')
-    .sort({ createdAt: -1 })
-    .lean();
+  try {
+    await dbConnect();
 
-  const enquiries = await Enquiry.find({})
-    .sort({ createdAt: -1 })
-    .lean();
+    // Fetch all necessary data
+    products = await Product.find({})
+      .populate('category', 'name')
+      .populate('subcategory', 'name')
+      .sort({ createdAt: -1 })
+      .lean();
 
-  const categories = await Category.find({})
-    .sort({ name: 1 })
-    .lean();
+    enquiries = await Enquiry.find({})
+      .sort({ createdAt: -1 })
+      .lean();
+
+    categories = await Category.find({})
+      .sort({ name: 1 })
+      .lean();
+  } catch (error) {
+    console.error("Database connection failed in admin dashboard:", error);
+  }
 
   // Safely serialize database documents for Client Component rendering
   const serializedProducts = JSON.parse(JSON.stringify(products));
