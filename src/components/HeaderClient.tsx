@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search, Menu, X, ChevronDown, User, Layers, Cpu, HardDrive, Shield, Monitor, Smartphone, Headphones, Tag, Heart, ChevronRight } from 'lucide-react';
 import { CategoryWithChildren } from '@/lib/categories';
 
@@ -13,6 +13,8 @@ interface HeaderClientProps {
 
 export default function HeaderClient({ categories }: HeaderClientProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === '/';
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategorySlug, setSelectedCategorySlug] = useState('all');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -166,7 +168,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
         </Link>
 
         {/* Customized Search bar (Matching Elitehubs composition) */}
-        <form onSubmit={handleSearchSubmit} className="w-full md:max-w-2xl flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm hover:border-slate-300 focus-within:border-accent transition-all bg-slate-50/50">
+        <form onSubmit={handleSearchSubmit} className="w-full md:max-w-2xl flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm hover:border-slate-300 focus-within:border-[#5b21b6] transition-all bg-slate-50/50">
           
           {/* Categories Selector Dropdown */}
           <div className="relative shrink-0 border-r border-slate-200 bg-white">
@@ -195,7 +197,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
           {/* Search Button */}
           <button
             type="submit"
-            className="bg-accent hover:bg-accent-hover text-white px-6 py-3 transition-colors shrink-0 cursor-pointer flex items-center justify-center"
+            className="bg-[#5b21b6] hover:bg-[#4c1d95] text-white px-6 py-3 transition-colors shrink-0 cursor-pointer flex items-center justify-center"
             aria-label="Submit Search"
           >
             <Search className="w-4 h-4" />
@@ -226,7 +228,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
               className="relative group h-full w-full flex items-center gap-2 text-slate-800 font-extrabold text-xs cursor-pointer pl-6 pr-6 transition-all"
             >
               {/* Expanding top border line from center on hover */}
-              <span className="absolute top-0 left-0 right-0 h-[3px] bg-brand-purple-light scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" />
+              <span className="absolute top-0 left-0 right-0 h-[2px] bg-brand-purple-light scale-x-0 group-hover:scale-x-100 opacity-0 group-hover:opacity-100 transition-all duration-300 origin-center" />
               <Menu className="w-4.5 h-4.5 text-slate-700 transition-colors" />
               <span>Browse All Categories</span>
               
@@ -292,34 +294,44 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
 
         {/* Center: Main Ribbon Navigation Links with Dropdown Arrows */}
         <nav className="hidden lg:flex flex-grow justify-center items-center gap-6 text-xs font-bold text-slate-655 h-full">
-          <Link href="/" className="hover:text-accent transition-colors py-4">Home</Link>
+          <Link 
+            href="/" 
+            className={`relative hover:text-[#5b21b6] transition-colors py-4 flex items-center h-full ${
+              isHome ? 'text-[#5b21b6] font-extrabold' : 'text-slate-600'
+            }`}
+          >
+            <span>Home</span>
+            {isHome && (
+              <span className="absolute bottom-0 left-[-4px] right-[-4px] h-[2px] bg-[#5b21b6] rounded-full" />
+            )}
+          </Link>
           
-          <Link href="/category/pc-components" className="hover:text-accent transition-colors flex items-center gap-1 group py-4">
+          <Link href="/category/pc-components" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
             <span>PC Components</span>
-            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-accent transition-colors" />
+            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/storage-nas" className="hover:text-accent transition-colors flex items-center gap-1 group py-4">
+          <Link href="/category/storage-nas" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
             <span>Storage & NAS</span>
-            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-accent transition-colors" />
+            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/peripherals" className="hover:text-accent transition-colors flex items-center gap-1 group py-4">
+          <Link href="/category/peripherals" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
             <span>Peripherals</span>
-            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-accent transition-colors" />
+            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/monitors-display" className="hover:text-accent transition-colors flex items-center gap-1 group py-4">
+          <Link href="/category/monitors-display" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
             <span>Monitors & Projectors</span>
-            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-accent transition-colors" />
+            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/network-security" className="hover:text-accent transition-colors flex items-center gap-1 group py-4">
+          <Link href="/category/network-security" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
             <span>Network & Security</span>
-            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-accent transition-colors" />
+            <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/support" className="hover:text-accent transition-colors py-4">Our Stores</Link>
+          <Link href="/support" className="hover:text-[#5b21b6] transition-colors py-4 h-full flex items-center">Our Stores</Link>
         </nav>
 
         {/* Right Spacer to mathematically balance the centered navigation links */}

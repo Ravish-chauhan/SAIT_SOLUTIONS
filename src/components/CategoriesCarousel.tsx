@@ -16,37 +16,37 @@ export default function CategoriesCarousel() {
     {
       title: 'PC Components',
       description: 'High-end gaming CPUs, GPUs, motherboards, RAM, and custom cabinets.',
-      image: '/hero-cabinet.png',
+      image: '/category/pc components.webp',
       link: '/category/pc-components',
     },
     {
       title: 'Storage & NAS',
       description: 'Enterprise storage servers, high-speed NVMe SSDs, and storage drives.',
-      image: '/custom-pc.png',
+      image: '/category/NAS-Storage.webp',
       link: '/category/storage-nas',
     },
     {
       title: 'Peripherals',
       description: 'Studio headphones, portable speakers, mechanical keyboards, and audio rigs.',
-      image: '/gaming_gear.png',
+      image: '/category/peripherals.avif',
       link: '/category/peripherals',
     },
     {
       title: 'Monitors & Projectors',
       description: 'Ultra-wide displays, gaming monitors, and high-quality projectors.',
-      image: '/hero-projector.png',
+      image: '/category/monitor.jpg',
       link: '/category/monitors-display',
     },
     {
       title: 'Network & Security',
       description: 'CCTV cameras, smart routers, switches, and remote access systems.',
-      image: '/hero-security.png',
+      image: '/category/network and security.jpg',
       link: '/category/network-security',
     },
     {
       title: 'Accessories',
       description: 'Gaming chairs, mounts, cables, power banks, and other accessories.',
-      image: '/hero-accessories.png',
+      image: '/category/accessories.jpg',
       link: '/category/peripherals',
     },
   ];
@@ -111,36 +111,36 @@ export default function CategoriesCarousel() {
       </div>
 
       {/* 2. Premium Centered Shop by Category Grid Section (Subtle Soft BG, No Borders) */}
-      <section className="bg-[#f0f4f8] py-16">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
+      <section className="bg-[#F8F9FC] py-16">
+        <div className="max-w-[1360px] mx-auto px-4 md:px-8">
           
           {/* Header */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-sans">
               Shop by Category
             </h2>
           </div>
 
-          {/* Grid: 6 items in a row on desktop, centered and compact */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
+          {/* Grid/Flex: Horizontally scrollable row on mobile, 6 columns on desktop */}
+          <div className="flex lg:grid lg:grid-cols-6 overflow-x-auto lg:overflow-x-visible scrollbar-none gap-5 snap-x snap-mandatory pb-4 lg:pb-0">
             {categories.map((cat, index) => (
               <Link
                 key={index}
                 href={cat.link}
-                className="bg-white rounded-xl border border-slate-100/50 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-300 flex flex-col items-center justify-between group cursor-pointer p-5"
+                className="bg-[#FFFFFF] rounded-xl border border-[#ECEEF3] shadow-[0_8px_30px_rgba(15,23,42,0.05)] hover:shadow-md hover:scale-[1.02] transition-all duration-300 flex flex-col items-center justify-between group cursor-pointer p-4 flex-shrink-0 w-[160px] sm:w-[185px] lg:w-auto snap-start"
               >
                 {/* Image Box */}
-                <div className="w-full aspect-square relative flex items-center justify-center p-1">
+                <div className="w-full h-[115px] md:h-[130px] relative flex items-center justify-center">
                   <Image
                     src={cat.image}
                     alt={cat.title}
                     fill
                     className="object-contain p-1 group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-w-768px) 50vw, 150px"
+                    sizes="(max-w-768px) 160px, 180px"
                   />
                 </div>
                 {/* Text Label */}
-                <div className="text-center mt-4">
+                <div className="text-center mt-3">
                   <span className="text-xs md:text-sm font-bold text-slate-800 group-hover:text-[#5b21b6] transition-colors leading-snug">
                     {cat.title}
                   </span>
@@ -150,7 +150,7 @@ export default function CategoriesCarousel() {
           </div>
 
           {/* Footer View All button */}
-          <div className="flex justify-center mt-12">
+          <div className="flex justify-center mt-8">
             <Link
               href="/category/pc-components"
               className="px-8 py-3 rounded-lg bg-[#5b21b6] hover:bg-[#4c1d95] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm hover:shadow-md active:scale-95"
