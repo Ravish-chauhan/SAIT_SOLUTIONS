@@ -192,7 +192,7 @@ export default function FeaturedProductsCarousel() {
   };
 
   return (
-    <section className="bg-white py-16 w-full overflow-hidden border-b border-slate-100">
+    <section className="bg-white pt-11 pb-9 md:pt-16 md:pb-11 w-full overflow-hidden">
       <div className="max-w-[1500px] mx-auto px-4 md:px-8">
         
         {/* Header Block with Arrows at Top Right */}
@@ -233,7 +233,7 @@ export default function FeaturedProductsCarousel() {
         <div
           ref={scrollRef}
           onScroll={handleScrollEvent}
-          className="flex gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth pb-6 pl-1 pt-2 no-scrollbar"
+          className="flex gap-3 sm:gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth pb-6 pl-0.5 pt-2 px-0.5 no-scrollbar"
           style={{
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
@@ -256,35 +256,35 @@ export default function FeaturedProductsCarousel() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: index * 0.05, ease: 'easeOut' }}
                 whileHover={{ y: -6, transition: { duration: 0.2, ease: 'easeOut' } }}
-                className="w-[245px] sm:w-[265px] shrink-0 snap-start bg-white border border-slate-100 rounded-2xl p-4 flex flex-col justify-between hover:shadow-xl transition-shadow duration-300 relative group"
+                className="w-[calc(50%-6px)] min-w-[150px] sm:w-[265px] shrink-0 snap-start bg-white border border-slate-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col justify-between hover:shadow-xl transition-shadow duration-300 relative group"
               >
                 <div>
                   {/* Purple Discount Badge */}
                   {prod.discount > 0 && (
-                    <span className="absolute top-4 left-4 bg-[#5b21b6] text-white text-[9px] font-black tracking-wider px-2 py-0.5 rounded-full z-10 shadow-sm">
+                    <span className="absolute top-2.5 left-2.5 sm:top-4 sm:left-4 bg-[#5b21b6] text-white text-[8px] sm:text-[9px] font-black tracking-wider px-1.5 sm:px-2 py-0.5 rounded-full z-10 shadow-sm">
                       -{prod.discount}%
                     </span>
                   )}
 
                   {/* Centered Image Box */}
-                  <div className="w-full aspect-[4/3] relative flex items-center justify-center bg-slate-50/50 rounded-xl overflow-hidden mb-4 border border-slate-50 p-2">
+                  <div className="w-full aspect-[4/3] relative flex items-center justify-center bg-slate-50/50 rounded-lg sm:rounded-xl overflow-hidden mb-2.5 sm:mb-4 border border-slate-50 p-1.5 sm:p-2">
                     <Image
                       src={prod.images[0]}
                       alt={prod.name}
                       fill
-                      className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
-                      sizes="200px"
+                      className="object-contain p-1 sm:p-2 group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 640px) 150px, 200px"
                     />
                   </div>
 
                   {/* Brand and Name */}
-                  <div className="space-y-1">
-                    <span className="text-[9px] text-slate-400 uppercase tracking-widest font-black block">
+                  <div className="space-y-0.5 sm:space-y-1">
+                    <span className="text-[8px] sm:text-[9px] text-slate-400 uppercase tracking-widest font-black block">
                       {prod.brand}
                     </span>
                     <Link
                       href={`/product/${prod.slug}`}
-                      className="text-slate-800 hover:text-[#5b21b6] font-bold text-xs line-clamp-2 leading-snug tracking-tight"
+                      className="text-slate-800 hover:text-[#5b21b6] font-bold text-[11px] sm:text-xs line-clamp-2 leading-snug tracking-tight"
                     >
                       {prod.name}
                     </Link>
@@ -292,21 +292,21 @@ export default function FeaturedProductsCarousel() {
                 </div>
 
                 {/* Bottom Price, Wishlist and Action */}
-                <div className="mt-4 pt-3 border-t border-slate-50 space-y-3">
+                <div className="mt-3 sm:mt-4 pt-2 border-t border-slate-50 space-y-2 sm:space-y-3">
                   {/* Price block & Wishlist */}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-baseline gap-2">
+                  <div className="flex items-center justify-between gap-1 sm:gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-2">
                       {prod.offerPrice ? (
                         <>
-                          <span className="text-slate-900 font-extrabold text-base">
+                          <span className="text-slate-900 font-extrabold text-xs sm:text-base">
                             ₹{prod.offerPrice.toLocaleString('en-IN')}
                           </span>
-                          <span className="text-slate-400 text-xs line-through text-[10px]">
+                          <span className="text-slate-400 text-[9px] sm:text-[10px] line-through">
                             ₹{prod.mrp.toLocaleString('en-IN')}
                           </span>
                         </>
                       ) : (
-                        <span className="text-slate-900 font-extrabold text-base">
+                        <span className="text-slate-900 font-extrabold text-xs sm:text-base">
                           ₹{prod.mrp.toLocaleString('en-IN')}
                         </span>
                       )}
@@ -317,14 +317,14 @@ export default function FeaturedProductsCarousel() {
                       whileTap={{ scale: 0.85 }}
                       whileHover={{ scale: 1.1 }}
                       onClick={(e) => toggleWishlist(prod._id, e)}
-                      className={`p-1.5 rounded-full border transition-all cursor-pointer ${
+                      className={`p-1 sm:p-1.5 rounded-full border transition-all cursor-pointer ${
                         isWishlisted
                           ? 'bg-red-50 border-red-200 text-red-500 shadow-sm'
                           : 'bg-white border-slate-100 hover:border-red-200 text-slate-400 hover:text-red-500 hover:bg-red-50/50'
                       }`}
                       title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
                     >
-                      <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-red-500' : ''}`} />
+                      <Heart className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isWishlisted ? 'fill-red-500' : ''}`} />
                     </motion.button>
                   </div>
 
@@ -333,9 +333,9 @@ export default function FeaturedProductsCarousel() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setSelectedProduct(prod)}
-                    className="w-full bg-gradient-to-r from-[#5b21b6] to-[#4c1d95] hover:brightness-110 text-white rounded-xl py-2.5 transition-all text-xs font-black tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                    className="w-full bg-gradient-to-r from-[#5b21b6] to-[#4c1d95] hover:brightness-110 text-white rounded-lg sm:rounded-xl py-2 sm:py-2.5 transition-all text-[10px] sm:text-xs font-black tracking-wide flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer shadow-sm"
                   >
-                    <MessageSquare className="w-3.5 h-3.5 shrink-0" />
+                    <MessageSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
                     <span>Send Enquiry</span>
                   </motion.button>
                 </div>

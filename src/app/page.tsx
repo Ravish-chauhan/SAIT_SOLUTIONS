@@ -6,6 +6,8 @@ import PromoLongBanner from '@/components/PromoLongBanner';
 import BestSellersByCategory from '@/components/BestSellersByCategory';
 import PeripheralZone from '@/components/PeripheralZone';
 import SideBySideBanners from '@/components/SideBySideBanners';
+import BrandMarquee from '@/components/BrandMarquee';
+import NewArrivalsCarousel from '@/components/NewArrivalsCarousel';
 import NeedHelpSection from '@/components/NeedHelpSection';
 import ValueTrustStrip from '@/components/ValueTrustStrip';
 
@@ -34,6 +36,12 @@ export default async function HomePage() {
 
       {/* Side by Side Dual Banners: Work & Productivity + Network & Security */}
       <SideBySideBanners />
+
+      {/* Infinite Tech Brands Marquee */}
+      <BrandMarquee />
+
+      {/* New Arrivals & Trending Products Carousel */}
+      <NewArrivalsCarousel />
 
       {/* Need Help Assistance Section */}
       <NeedHelpSection />

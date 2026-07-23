@@ -124,7 +124,7 @@ export default function PeripheralZone() {
   };
 
   return (
-    <section className="w-full pt-6 md:pt-8 pb-3 md:pb-4 bg-white overflow-hidden">
+    <section className="hidden sm:block w-full pt-6 md:pt-8 pb-3 md:pb-4 bg-white overflow-hidden">
       <div className="max-w-[1500px] mx-auto px-4 md:px-8">
         
         {/* Main Banner Box with peripheral_zone.png as Full Background */}

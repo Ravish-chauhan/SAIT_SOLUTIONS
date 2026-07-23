@@ -10,8 +10,8 @@ export default function PromoLongBanner() {
     <section className="bg-white pb-8 md:pb-10 w-full">
       <div className="max-w-[1500px] mx-auto px-4 md:px-8 py-3">
         
-        {/* Banner Wrapper - h-[95px] on small mobiles under 380px, h-[110px] on larger mobiles, lg:h-[230px] on desktop */}
-        <div className="relative w-full rounded-none lg:rounded-2xl overflow-hidden shadow-none lg:shadow-2xl bg-[#0c0a13] h-[95px] min-[380px]:h-[110px] lg:h-[230px]">
+        {/* Banner Wrapper - Rounded corners on all screens */}
+        <div className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-md sm:shadow-xl lg:shadow-2xl bg-[#0c0a13] h-[95px] min-[380px]:h-[110px] lg:h-[230px]">
           
           {/* Complete background image - object-left crops to the left-side on mobile, zoomed to scale-[1.6] */}
           <div className="absolute inset-0 z-0">
@@ -35,9 +35,6 @@ export default function PromoLongBanner() {
               <h2 className="text-xs sm:text-2xl lg:text-3xl font-black text-white tracking-tight uppercase leading-tight font-sans">
                 BUILD YOUR DREAM PC
               </h2>
-              
-              {/* Slim purple divider line (Hidden on mobile) */}
-              <div className="hidden sm:block w-12 h-[2.5px] bg-[#5b21b6] my-2 sm:my-3 rounded-full" />
               
               <p className="text-[8.5px] sm:text-sm text-slate-200 font-semibold mb-1.5 lg:mb-5 max-w-[180px] sm:max-w-sm">
                 High performance. Best quality. Great prices.

@@ -34,7 +34,7 @@ export default function HeroCarousel() {
       title: 'Hear Every Detail.',
       titleAccent: 'Feel Every Beat.',
       subtitle: 'High-quality audio gear for music lovers, gamers, creators, and everyone in between.',
-      ctaText: 'EXPLORE AUDIO GEAR →',
+      ctaText: 'EXPLORE AUDIO →',
       link: '/category/peripherals',
       imagePath: '/sound-banner.png',
     },
@@ -136,7 +136,7 @@ export default function HeroCarousel() {
 
               {/* Purple divider line for first slide */}
               {slide.id === 1 && (
-                <div className="w-12 h-[2px] bg-[#5b21b6] mt-1 mb-3"></div>
+                <div className="w-8 sm:w-12 h-[2px] bg-[#5b21b6] mt-1 mb-2.5 sm:mb-3"></div>
               )}
 
               <p className={`hidden sm:block text-xs md:text-base font-semibold leading-relaxed max-w-md ${
@@ -324,10 +324,10 @@ export default function HeroCarousel() {
                 </div>
               )}
 
-              <div className="pt-1 sm:pt-2 md:pt-3">
+              <div className="pt-0.5 sm:pt-2 md:pt-3">
                 <Link
                   href={slide.link}
-                  className={`inline-block px-4 py-2 sm:px-8 sm:py-3.5 text-white font-black text-[9px] sm:text-xs tracking-wider uppercase rounded-md sm:rounded-lg shadow-sm sm:shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-100 cursor-pointer ${
+                  className={`inline-block px-2.5 py-1 sm:px-8 sm:py-3.5 text-white font-black text-[7.5px] sm:text-xs tracking-wider uppercase rounded-sm sm:rounded-lg shadow-sm sm:shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-100 cursor-pointer ${
                     slide.id === 1 || slide.id === 4 || slide.id === 5
                       ? 'bg-[#5b21b6] hover:bg-[#4c1d95]'
                       : slide.id === 2

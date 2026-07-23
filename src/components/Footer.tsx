@@ -1,60 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, MapPin, Phone, Send, Check } from 'lucide-react';
+import { Mail, MapPin, Phone, Clock, MessageCircle } from 'lucide-react';
 
 export default function Footer() {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.phone) return;
-
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('/api/enquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productName: 'B2B Dealer / Bulk Enquiry',
-          productUrl: typeof window !== 'undefined' ? window.location.href : '',
-          customerName: formData.name,
-          customerPhone: formData.phone,
-          message: formData.message,
-        }),
-      });
-
-      if (response.ok) {
-        setIsSubmitted(true);
-        const text = encodeURIComponent(
-          `Hi Sait Solutions, I would like to submit a B2B Dealer/Bulk enquiry.\n\nName: ${formData.name}\nPhone: ${formData.phone}\nMessage: ${formData.message}`
-        );
-        setTimeout(() => {
-          window.open(`https://wa.me/919876543210?text=${text}`, '_blank');
-          setFormData({ name: '', phone: '', message: '' });
-          setIsSubmitted(false);
-        }, 1500);
-      }
-    } catch (error) {
-      console.error('Error submitting B2B enquiry:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const whatsappNumber = '919876543210';
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    'Hi Sait Solutions, I would like to inquire about IT hardware products.'
+  )}`;
 
   return (
-    <footer className="w-full bg-[#0c0915] border-t border-zinc-900 pt-16 pb-8 text-zinc-400">
+    <footer className="w-full bg-[#0c0915] border-t border-zinc-900 pt-16 pb-8 text-zinc-300">
       <div className="max-w-[1500px] mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 mb-14">
         
-        {/* Brand Section with Exact Navbar Logo Composition */}
+        {/* Column 1: Brand & Contact Info */}
         <div className="space-y-5">
           
           {/* Logo with White Badge for Monogram + Divider + Text */}
@@ -75,40 +36,46 @@ export default function Footer() {
             </span>
           </Link>
 
-          <p className="text-xs text-zinc-400 leading-relaxed font-medium">
+          <p className="text-xs text-zinc-300 leading-relaxed font-normal">
             Sait Solutions is an authorized distributor of high-performance PC components, networking hardware, monitors, enterprise storage, and security systems.
           </p>
 
           <div className="space-y-3 text-xs pt-1">
-            <div className="flex items-start gap-2.5 text-zinc-300">
-              <div className="p-1.5 rounded-lg bg-zinc-900 text-purple-400 border border-zinc-800 shrink-0 mt-0.5">
+            <div className="flex items-start gap-2.5 text-zinc-200">
+              <div className="p-1.5 rounded-lg bg-purple-950/60 text-purple-400 border border-purple-800/40 shrink-0 mt-0.5">
                 <MapPin className="w-3.5 h-3.5" />
               </div>
-              <span className="leading-tight font-medium">123 IT Plaza, SP Road, Bengaluru, Karnataka</span>
+              <span className="leading-tight font-medium text-zinc-200">
+                123 IT Plaza, SP Road, Bengaluru, Karnataka
+              </span>
             </div>
 
-            <div className="flex items-center gap-2.5 text-zinc-300">
-              <div className="p-1.5 rounded-lg bg-zinc-900 text-purple-400 border border-zinc-800 shrink-0">
+            <div className="flex items-center gap-2.5 text-zinc-200">
+              <div className="p-1.5 rounded-lg bg-purple-950/60 text-purple-400 border border-purple-800/40 shrink-0">
                 <Phone className="w-3.5 h-3.5" />
               </div>
-              <span className="font-medium">+91 98765 43210</span>
+              <a href="tel:+919876543210" className="font-bold text-white hover:text-purple-300 transition-colors">
+                +91 98765 43210
+              </a>
             </div>
 
-            <div className="flex items-center gap-2.5 text-zinc-300">
-              <div className="p-1.5 rounded-lg bg-zinc-900 text-purple-400 border border-zinc-800 shrink-0">
+            <div className="flex items-center gap-2.5 text-zinc-200">
+              <div className="p-1.5 rounded-lg bg-purple-950/60 text-purple-400 border border-purple-800/40 shrink-0">
                 <Mail className="w-3.5 h-3.5" />
               </div>
-              <span className="font-medium">support@saitsol.com</span>
+              <a href="mailto:support@saitsol.com" className="font-bold text-white hover:text-purple-300 transition-colors">
+                support@saitsol.com
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Hot Categories */}
+        {/* Column 2: Hot Categories */}
         <div className="space-y-4">
-          <h3 className="text-white font-extrabold text-xs tracking-widest uppercase border-l-2 border-[#5b21b6] pl-2.5">
+          <h3 className="text-white font-extrabold text-xs tracking-widest uppercase border-l-2 border-purple-500 pl-2.5">
             Hot Categories
           </h3>
-          <ul className="space-y-2.5 text-xs font-semibold">
+          <ul className="space-y-2.5 text-xs font-medium text-zinc-300">
             <li>
               <Link href="/category/pc-components" className="hover:text-white transition-colors">
                 PC Components & Cabinets
@@ -137,12 +104,12 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Company Links */}
+        {/* Column 3: Company & Services */}
         <div className="space-y-4">
-          <h3 className="text-white font-extrabold text-xs tracking-widest uppercase border-l-2 border-[#5b21b6] pl-2.5">
+          <h3 className="text-white font-extrabold text-xs tracking-widest uppercase border-l-2 border-purple-500 pl-2.5">
             Company & Services
           </h3>
-          <ul className="space-y-2.5 text-xs font-semibold">
+          <ul className="space-y-2.5 text-xs font-medium text-zinc-300">
             <li>
               <Link href="/about" className="hover:text-white transition-colors">
                 About Our Business
@@ -159,73 +126,56 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                B2B Dealer Registration
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                Product Inquiry
               </a>
             </li>
           </ul>
         </div>
 
-        {/* Dealer Registration Form */}
-        <div className="space-y-3.5 bg-zinc-900/60 border border-zinc-800/80 p-4.5 rounded-2xl">
-          <h3 className="text-white font-extrabold text-xs tracking-wider uppercase">
-            Dealer & Bulk Enquiry
+        {/* Column 4: Business Hours & Support */}
+        <div className="space-y-4">
+          <h3 className="text-white font-extrabold text-xs tracking-widest uppercase border-l-2 border-purple-500 pl-2.5">
+            Business Hours & Support
           </h3>
-          <p className="text-[11px] text-zinc-400 font-medium leading-normal">
-            Submit your contact info to register as a local dealer and unlock wholesale pricing.
-          </p>
-
-          {isSubmitted ? (
-            <div className="bg-emerald-950/60 border border-emerald-700/60 text-emerald-400 p-3.5 rounded-xl flex items-center gap-2 text-xs font-bold">
-              <Check className="w-4 h-4 shrink-0 text-emerald-400" />
-              <span>Success! Opening WhatsApp chat...</span>
+          
+          <div className="space-y-3 text-xs">
+            <div className="flex items-start gap-2.5 text-zinc-200">
+              <div className="p-1.5 rounded-lg bg-purple-950/60 text-purple-400 border border-purple-800/40 shrink-0 mt-0.5">
+                <Clock className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <span className="font-bold text-white block">Monday - Saturday</span>
+                <span className="text-zinc-400 text-[11px]">9:00 AM - 7:00 PM IST</span>
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-2.5 text-xs">
-              <input
-                type="text"
-                placeholder="Business/Contact Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#5b21b6] text-xs font-medium"
-                required
-              />
-              <input
-                type="tel"
-                placeholder="WhatsApp Number"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#5b21b6] text-xs font-medium"
-                required
-              />
-              <textarea
-                placeholder="Product requirements / Bulk volume..."
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-[#5b21b6] text-xs font-medium min-h-[55px] resize-none"
-              />
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-[#5b21b6] to-[#4c1d95] hover:brightness-110 text-white rounded-xl py-2.5 transition-all text-xs font-bold tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm active:scale-98 disabled:opacity-50"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{isSubmitting ? 'Submitting...' : 'Register Dealer'}</span>
-              </button>
-            </form>
-          )}
+
+            <p className="text-zinc-300 text-xs leading-relaxed font-normal pt-1">
+              Have questions or need custom quotes? Connect directly with our team over WhatsApp for instant assistance.
+            </p>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#25d366]/15 hover:bg-[#25d366] text-[#25d366] hover:text-white border border-[#25d366]/40 rounded-xl px-4 py-2.5 text-xs font-extrabold transition-all cursor-pointer shadow-sm active:scale-95 mt-2"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Chat on WhatsApp</span>
+            </a>
+          </div>
         </div>
 
       </div>
 
       {/* Copyright Bar */}
-      <div className="max-w-[1500px] mx-auto px-4 md:px-8 border-t border-zinc-900 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-zinc-500 font-medium">
+      <div className="max-w-[1500px] mx-auto px-4 md:px-8 border-t border-zinc-900/80 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-zinc-400 font-medium">
         <div>
-          &copy; {new Date().getFullYear()} Sait Solutions. All rights reserved.
+          &copy; {new Date().getFullYear()} <span className="text-white font-bold">Sait Solutions</span>. All rights reserved.
         </div>
-        <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-zinc-300 transition-colors">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-zinc-300 transition-colors">Terms of Service</Link>
+        <div className="flex gap-5">
+          <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
         </div>
       </div>
     </footer>

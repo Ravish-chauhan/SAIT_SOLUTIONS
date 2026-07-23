@@ -10,93 +10,174 @@ export default function NeedHelpSection() {
   )}`;
 
   return (
-    <section className="w-full bg-white py-6 md:py-8 overflow-hidden">
+    <section className="w-full bg-white py-6 md:py-10 overflow-hidden">
       <div className="max-w-[1500px] mx-auto px-4 md:px-8">
         
-        {/* Soft Lavender Minimal Card Container */}
-        <div className="bg-[#f9f8ff] border border-purple-100/80 rounded-3xl p-6 sm:p-8 md:p-9 shadow-sm">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-            
-            {/* Left Block: Headline & Subtitle */}
-            <div className="lg:col-span-4 lg:border-r border-slate-200/80 lg:pr-6">
-              <span className="text-[10px] sm:text-xs font-black uppercase text-[#5b21b6] tracking-widest block mb-1.5">
+        {/* Soft Lavender Card Container */}
+        <div className="bg-[#f5f3ff] border border-purple-100/80 rounded-2xl md:rounded-3xl p-5 sm:p-7 md:p-8 shadow-sm">
+          
+          {/* ========================================== */}
+          {/* 1. MOBILE DESIGN (Visible on Phone screens) */}
+          {/* ========================================== */}
+          <div className="md:hidden">
+            {/* Top Heading */}
+            <div className="mb-5">
+              <span className="text-xs font-black uppercase text-[#6d28d9] tracking-widest block mb-1.5">
                 NEED HELP?
               </span>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug tracking-tight font-sans">
+              <h3 className="text-xl font-extrabold text-slate-900 leading-snug tracking-tight font-sans">
                 Can’t find the product you’re looking for?
               </h3>
-              <p className="text-xs font-medium text-slate-500 mt-2 leading-relaxed">
-                Our team is here to help you find the right product for your needs.
-              </p>
             </div>
 
-            {/* Middle Block: 2 Contact Options (Call Us & Email Us) */}
-            <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-6 items-center">
-              
-              {/* Option 1: Call Us */}
+            {/* Middle Row: WhatsApp, Call Us & Email Us */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5 items-center">
+              {/* WhatsApp */}
               <a
-                href="tel:+919876543210"
-                className="flex items-center gap-3.5 group"
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 group"
               >
-                <div className="w-11 h-11 rounded-full bg-purple-100/80 text-[#5b21b6] flex items-center justify-center shrink-0 group-hover:bg-[#5b21b6] group-hover:text-white transition-all">
-                  <Phone className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
+                  <MessageCircle className="w-4.5 h-4.5" />
                 </div>
                 <div>
-                  <span className="text-xs font-extrabold text-slate-900 block group-hover:text-[#5b21b6] transition-colors">
-                    Call Us
+                  <span className="text-xs font-extrabold text-slate-900 block group-hover:text-[#6d28d9] transition-colors leading-none mb-1">
+                    WhatsApp
                   </span>
-                  <span className="text-xs sm:text-sm font-black text-[#5b21b6] block">
+                  <span className="text-xs font-bold text-[#6d28d9] block">
                     +91 98765 43210
                   </span>
-                  <span className="text-[11px] text-slate-400 font-medium block">
+                </div>
+              </a>
+
+              {/* Call Us */}
+              <a href="tel:+919876543210" className="flex items-center gap-3 group">
+                <div className="w-9 h-9 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
+                  <Phone className="w-4.5 h-4.5" />
+                </div>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 block group-hover:text-[#6d28d9] transition-colors leading-none mb-1">
+                    Call Us
+                  </span>
+                  <span className="text-[11px] text-slate-500 font-medium block leading-tight">
                     Mon - Sat (9AM - 7PM)
                   </span>
                 </div>
               </a>
 
-              {/* Option 2: Email Us (Expanded Full Visibility) */}
-              <a
-                href="mailto:support@saitsol.com"
-                className="flex items-center gap-3.5 sm:border-l border-slate-200/70 sm:pl-6 group"
-              >
-                <div className="w-11 h-11 rounded-full bg-purple-100/80 text-[#5b21b6] flex items-center justify-center shrink-0 group-hover:bg-[#5b21b6] group-hover:text-white transition-all">
-                  <Mail className="w-5 h-5" />
+              {/* Email Us */}
+              <a href="mailto:support@saitsol.com" className="flex items-center gap-3 group">
+                <div className="w-9 h-9 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
+                  <Mail className="w-4.5 h-4.5" />
                 </div>
                 <div>
-                  <span className="text-xs font-extrabold text-slate-900 block group-hover:text-[#5b21b6] transition-colors">
+                  <span className="text-xs font-extrabold text-slate-900 block group-hover:text-[#6d28d9] transition-colors leading-none mb-1">
                     Email Us
                   </span>
-                  <span className="text-xs sm:text-sm font-black text-[#5b21b6] block whitespace-nowrap">
+                  <span className="text-[11px] font-bold text-[#6d28d9] block">
                     support@saitsol.com
-                  </span>
-                  <span className="text-[11px] text-slate-400 font-medium block">
-                    We reply within 24h
                   </span>
                 </div>
               </a>
-
             </div>
 
-            {/* Right Block: Still Need Help CTA */}
-            <div className="lg:col-span-3 lg:border-l border-slate-200/80 lg:pl-6 flex flex-col items-start justify-center">
-              <h4 className="text-xs sm:text-sm font-extrabold text-slate-900">
-                Still need help?
-              </h4>
-              <p className="text-[11px] text-slate-500 font-medium mt-1 leading-normal">
-                Our experts are ready to assist you over WhatsApp.
-              </p>
+            {/* Bottom Full-Width Chat on WhatsApp Button */}
+            <div>
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3.5 inline-flex items-center gap-2 border-2 border-[#5b21b6] text-[#5b21b6] hover:bg-[#5b21b6] hover:text-white rounded-xl px-4 py-2.5 text-xs font-extrabold transition-all cursor-pointer shadow-sm active:scale-95"
+                className="w-full py-3 px-4 rounded-xl border-2 border-[#6d28d9] bg-white hover:bg-purple-50 text-[#6d28d9] font-extrabold text-sm flex items-center justify-center gap-2.5 transition-all shadow-sm active:scale-[0.99] cursor-pointer"
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="w-5 h-5 shrink-0" />
+                <span>Chat on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          {/* ======================================================== */}
+          {/* 2. LAPTOP / DESKTOP DESIGN (Matching Reference Image)    */}
+          {/* ======================================================== */}
+          <div className="hidden md:grid md:grid-cols-12 gap-6 items-center divide-x divide-purple-200/60">
+            
+            {/* Col 1: Heading & Subtitle (4 cols) */}
+            <div className="md:col-span-4 pr-4">
+              <span className="text-xs font-black uppercase text-[#6d28d9] tracking-widest block mb-1">
+                NEED HELP?
+              </span>
+              <h3 className="text-xl lg:text-2xl font-extrabold text-slate-900 leading-tight tracking-tight font-sans mb-1.5">
+                Can’t find the product you’re looking for?
+              </h3>
+              <p className="text-xs text-slate-500 font-medium">
+                Our team is here to help you find the right product for your needs.
+              </p>
+            </div>
+
+            {/* Col 2: Call Us (3 cols) */}
+            <div className="md:col-span-3 pl-6 pr-4 flex items-center gap-3.5 group">
+              <div className="w-11 h-11 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
+                <Phone className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-xs font-extrabold text-slate-900 block leading-tight mb-0.5">
+                  Call Us
+                </span>
+                <a
+                  href="tel:+919876543210"
+                  className="text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight"
+                >
+                  +91 98765 43210
+                </a>
+                <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
+                  Mon - Sat (9AM - 7PM)
+                </span>
+              </div>
+            </div>
+
+            {/* Col 3: Email Us (3 cols) */}
+            <div className="md:col-span-3 pl-6 pr-4 flex items-center gap-3.5 group">
+              <div className="w-11 h-11 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
+                <Mail className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-xs font-extrabold text-slate-900 block leading-tight mb-0.5">
+                  Email Us
+                </span>
+                <a
+                  href="mailto:support@saitsol.com"
+                  className="text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight"
+                >
+                  support@saitsol.com
+                </a>
+                <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
+                  We reply within 24h
+                </span>
+              </div>
+            </div>
+
+            {/* Col 4: Still need help? CTA Button (2 cols) */}
+            <div className="md:col-span-2 pl-6 flex flex-col justify-center items-start space-y-2">
+              <div>
+                <h4 className="text-xs font-extrabold text-slate-900">Still need help?</h4>
+                <p className="text-[11px] text-slate-500 font-medium leading-tight mt-0.5">
+                  Our experts are ready to assist.
+                </p>
+              </div>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border-2 border-[#6d28d9] bg-white hover:bg-purple-50 text-[#6d28d9] font-extrabold text-xs transition-all shadow-sm active:scale-95 cursor-pointer mt-1"
+              >
+                <MessageCircle className="w-4 h-4 shrink-0" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>
 
           </div>
+
         </div>
 
       </div>

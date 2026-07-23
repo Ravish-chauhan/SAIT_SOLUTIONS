@@ -614,7 +614,7 @@ export default function BestSellersByCategory() {
               exit={{ opacity: 0, x: -15 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
               ref={scrollRef}
-              className="flex gap-4 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth pb-3 px-1 no-scrollbar items-stretch"
+              className="flex gap-2.5 sm:gap-4 overflow-x-auto scrollbar-none snap-x snap-mandatory scroll-smooth pb-3 px-0.5 no-scrollbar items-stretch"
               style={{
                 WebkitOverflowScrolling: 'touch',
                 scrollbarWidth: 'none',
@@ -632,60 +632,60 @@ export default function BestSellersByCategory() {
                 return (
                   <div
                     key={prod.id}
-                    className="w-[190px] sm:w-[210px] xl:w-[220px] shrink-0 snap-start bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between relative group/card border border-slate-100"
+                    className="w-[calc(50%-5px)] min-w-[145px] sm:w-[210px] xl:w-[220px] shrink-0 snap-start bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between relative group/card border border-slate-100"
                   >
                     <div>
                       {/* Image Box & Wishlist Button */}
-                      <div className="w-full aspect-square relative mb-3 bg-slate-50/50 rounded-xl flex items-center justify-center overflow-hidden p-2">
+                      <div className="w-full aspect-square relative mb-2 sm:mb-3 bg-slate-50/50 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden p-1.5 sm:p-2">
                         <Image
                           src={prod.image}
                           alt={prod.name}
                           fill
                           className="object-contain p-1 group-hover/card:scale-105 transition-transform duration-300"
-                          sizes="200px"
+                          sizes="(max-w-640px) 140px, 200px"
                         />
                         
                         {/* Wishlist Button */}
                         <button
                           onClick={(e) => toggleWishlist(prod.id, e)}
-                          className={`absolute top-2 right-2 p-1.5 rounded-full border transition-all cursor-pointer z-10 ${
+                          className={`absolute top-1.5 right-1.5 sm:top-2 sm:right-2 p-1 sm:p-1.5 rounded-full border transition-all cursor-pointer z-10 ${
                             isWishlisted
                               ? 'bg-red-50 border-red-200 text-red-500 shadow-sm'
                               : 'bg-white/80 backdrop-blur-sm border-slate-100 text-slate-400 hover:text-red-500 hover:bg-white'
                           }`}
                           title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
                         >
-                          <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-red-500' : ''}`} />
+                          <Heart className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isWishlisted ? 'fill-red-500' : ''}`} />
                         </button>
                       </div>
 
                       {/* Title & Sub-category */}
-                      <div className="space-y-1">
+                      <div className="space-y-0.5 sm:space-y-1">
                         <h3 className="font-extrabold text-slate-900 text-xs sm:text-sm leading-snug group-hover/card:text-[#5b21b6] transition-colors line-clamp-1">
                           {prod.name}
                         </h3>
-                        <p className="text-slate-400 text-[11px] sm:text-xs font-semibold line-clamp-1">
+                        <p className="text-slate-400 text-[10px] sm:text-xs font-semibold line-clamp-1">
                           {prod.categoryLabel}
                         </p>
                       </div>
                     </div>
 
                     {/* Price & Send Enquiry */}
-                    <div className="mt-4 pt-2 border-t border-slate-100 space-y-2.5">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-slate-900 font-extrabold text-sm sm:text-base">
+                    <div className="mt-3 sm:mt-4 pt-2 border-t border-slate-100 space-y-2 sm:space-y-2.5">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-2">
+                        <span className="text-slate-900 font-extrabold text-xs sm:text-base">
                           ₹{prod.offerPrice.toLocaleString('en-IN')}
                         </span>
-                        <span className="text-slate-400 text-xs line-through text-[11px]">
+                        <span className="text-slate-400 text-[9px] sm:text-xs line-through">
                           ₹{prod.mrp.toLocaleString('en-IN')}
                         </span>
                       </div>
 
                       <button
                         onClick={() => setSelectedProduct(prod)}
-                        className="w-full bg-gradient-to-r from-[#5b21b6] to-[#4c1d95] hover:brightness-110 text-white rounded-xl py-2 px-3 transition-all text-xs font-bold tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm active:scale-98"
+                        className="w-full bg-gradient-to-r from-[#5b21b6] to-[#4c1d95] hover:brightness-110 text-white rounded-lg sm:rounded-xl py-1.5 sm:py-2 px-2 sm:px-3 transition-all text-[10px] sm:text-xs font-bold tracking-wide flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer shadow-sm active:scale-98"
                       >
-                        <MessageSquare className="w-3.5 h-3.5 shrink-0" />
+                        <MessageSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
                         <span>Send Enquiry</span>
                       </button>
                     </div>
