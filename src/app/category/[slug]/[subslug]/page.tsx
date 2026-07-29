@@ -4,8 +4,9 @@ import dbConnect from '@/lib/db';
 import Category from '@/models/Category';
 import Product from '@/models/Product';
 import CategoryListingClient from '@/components/CategoryListingClient';
+import { getCachedMainCategories } from '@/lib/cache';
 
-export const revalidate = 60; // Revalidate every minute
+export const revalidate = 3600;
 
 interface SubcategoryPageProps {
   params: Promise<{
@@ -20,34 +21,58 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
   try {
     await dbConnect();
     
-    // 1. Find the target subcategory
+    // 1. Fetch main categories for header switcher
+    const allMainCategories = await getCachedMainCategories();
+
+    // 2. Find the target subcategory
     const targetCategory = await Category.findOne({ slug: subslug }).lean();
     if (!targetCategory || !targetCategory.parent) {
       notFound();
     }
 
-    // 2. Get the parent category
+    // 3. Get the parent category
     const parentCategory = await Category.findById(targetCategory.parent).lean();
     if (!parentCategory) {
       notFound();
     }
     
-    // 3. Get all subcategories under the same parent for the sidebar listing
-    const subcategories = await Category.find({ parent: parentCategory._id }).sort({ order: 1 }).lean();
+    // 4. Get all subcategories under the same parent
+    const rawSubs = await Category.find({ parent: parentCategory._id }).sort({ order: 1, name: 1 }).lean();
+    const subcategories = await Promise.all(
+      rawSubs.map(async (sub) => {
+        const subsubs = await Category.find({ parent: sub._id }).sort({ order: 1, name: 1 }).lean();
+        return {
+          ...sub,
+          _id: sub._id.toString(),
+          subsubcategories: JSON.parse(JSON.stringify(subsubs)),
+        };
+      })
+    );
 
-    // 4. Find products belonging to this subcategory
-    const products = await Product.find({ subcategory: targetCategory._id }).sort({ createdAt: -1 }).lean();
+    // 5. Find products belonging to this subcategory or sub-subcategories
+    const subsubcatIds = (await Category.find({ parent: targetCategory._id })).map((s) => s._id);
+    const products = await Product.find({
+      $or: [
+        { subcategory: targetCategory._id },
+        { subsubcategory: { $in: subsubcatIds } }
+      ]
+    }).sort({ createdAt: -1 }).lean();
 
-    // Safely serialize database documents
-    const serializedProducts = JSON.parse(JSON.stringify(products));
+    const serializedTarget = JSON.parse(JSON.stringify(targetCategory));
+    const serializedParent = JSON.parse(JSON.stringify(parentCategory));
     const serializedSubcategories = JSON.parse(JSON.stringify(subcategories));
+    const serializedProducts = JSON.parse(JSON.stringify(products));
 
     return (
       <CategoryListingClient
-        categoryName={parentCategory.name}
+        targetCategory={serializedTarget}
+        mainCategory={serializedParent}
+        parentCategory={serializedParent}
+        allMainCategories={allMainCategories}
+        currentMainSlug={serializedParent.slug}
         subcategories={serializedSubcategories}
         products={serializedProducts}
-        activeSubcategorySlug={targetCategory.slug}
+        activeSubcategorySlug={serializedTarget.slug}
       />
     );
   } catch (error) {

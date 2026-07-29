@@ -347,10 +347,11 @@ export default function FeaturedProductsCarousel() {
         {/* Bottom Actions Row */}
         <div className="flex justify-end mt-4">
           <Link
-            href="/category/pc-components"
-            className="text-xs font-black text-[#5b21b6] hover:text-[#4c1d95] transition-colors hover:underline tracking-widest uppercase"
+            href="/categories"
+            className="text-xs font-black text-[#5b21b6] hover:text-[#4c1d95] transition-colors hover:underline tracking-widest uppercase flex items-center gap-1"
           >
-            View All Products →
+            <span>View All Products</span>
+            <span>→</span>
           </Link>
         </div>
 

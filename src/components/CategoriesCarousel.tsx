@@ -191,10 +191,11 @@ export default function CategoriesCarousel() {
           {/* Footer View All button */}
           <div className="flex justify-center mt-8">
             <Link
-              href="/category/pc-components"
-              className="px-8 py-3 rounded-lg bg-[#5b21b6] hover:bg-[#4c1d95] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm hover:shadow-md active:scale-95"
+              href="/categories"
+              className="px-8 py-3 rounded-lg bg-[#5b21b6] hover:bg-[#4c1d95] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm hover:shadow-md active:scale-95 flex items-center gap-2"
             >
-              View All Categories
+              <span>View All Categories</span>
+              <span>→</span>
             </Link>
           </div>
 

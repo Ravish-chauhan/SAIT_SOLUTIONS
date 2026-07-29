@@ -2,12 +2,13 @@ import React from 'react';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import dbConnect from '@/lib/db';
+import Category from '@/models/Category';
 import Product from '@/models/Product';
 import Enquiry from '@/models/Enquiry';
-import Category from '@/models/Category';
 import AdminPanelClient from '@/components/AdminPanelClient';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function AdminDashboard() {
   const cookieStore = await cookies();
@@ -25,10 +26,15 @@ export default async function AdminDashboard() {
   try {
     await dbConnect();
 
-    // Fetch all necessary data
+    // Ensure Category schema is registered prior to populate queries
+    categories = await Category.find({})
+      .sort({ name: 1 })
+      .lean();
+
     products = await Product.find({})
       .populate('category', 'name')
       .populate('subcategory', 'name')
+      .populate('subsubcategory', 'name')
       .sort({ createdAt: -1 })
       .lean();
 
@@ -36,11 +42,10 @@ export default async function AdminDashboard() {
       .sort({ createdAt: -1 })
       .lean();
 
-    categories = await Category.find({})
-      .sort({ name: 1 })
-      .lean();
+    console.log('ADMIN DASHBOARD SERVER FETCH CATEGORIES LIST:', categories.map(c => ({ id: c._id, name: c.name })));
+    console.log('ADMIN DASHBOARD SERVER FETCH COUNT:', categories.length);
   } catch (error) {
-    console.error("Database connection failed in admin dashboard:", error);
+    console.error("Database error in admin dashboard:", error);
   }
 
   // Safely serialize database documents for Client Component rendering
@@ -52,7 +57,7 @@ export default async function AdminDashboard() {
     <AdminPanelClient
       initialProducts={serializedProducts}
       initialEnquiries={serializedEnquiries}
-      categories={serializedCategories}
+      initialCategories={serializedCategories}
     />
   );
 }

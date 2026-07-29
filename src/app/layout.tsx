@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,11 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="antialiased flex flex-col min-h-screen bg-slate-50 text-slate-900">
+      <body className="antialiased flex flex-col min-h-screen bg-slate-50 text-slate-900 pb-14 md:pb-0">
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />
         <WhatsAppButton />
+        <MobileBottomNav />
       </body>
     </html>
   );

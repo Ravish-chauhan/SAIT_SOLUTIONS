@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { revalidateTag, revalidatePath } from 'next/cache';
 import dbConnect from '@/lib/db';
+import Category from '@/models/Category';
 import Product from '@/models/Product';
 
 async function verifyAuth() {
@@ -16,9 +18,13 @@ export async function GET() {
     }
 
     await dbConnect();
+    // Ensure Category schema is loaded before populate
+    await Category.findOne({}).lean();
+
     const products = await Product.find({})
       .populate('category', 'name')
       .populate('subcategory', 'name')
+      .populate('subsubcategory', 'name')
       .sort({ createdAt: -1 })
       .lean();
 
@@ -37,7 +43,6 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    // Generate slug from product name
     const slug = body.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
@@ -47,6 +52,14 @@ export async function POST(request: Request) {
       ...body,
       slug,
     });
+
+    try {
+      (revalidateTag as any)('products');
+      (revalidateTag as any)('categories');
+      revalidatePath('/', 'layout');
+    } catch (e) {
+      console.error('Revalidation error:', e);
+    }
 
     return NextResponse.json({ success: true, product: newProduct });
   } catch (error: any) {
@@ -62,7 +75,7 @@ export async function PUT(request: Request) {
     }
 
     await dbConnect();
-    const { updates } = await request.json(); // Array of { id, mrp, offerPrice, stockStatus }
+    const { updates } = await request.json();
 
     if (!Array.isArray(updates)) {
       return NextResponse.json({ success: false, error: 'Updates must be an array' }, { status: 400 });
@@ -74,6 +87,13 @@ export async function PUT(request: Request) {
         offerPrice: update.offerPrice || undefined,
         stockStatus: update.stockStatus,
       });
+    }
+
+    try {
+      (revalidateTag as any)('products');
+      revalidatePath('/', 'layout');
+    } catch (e) {
+      console.error('Revalidation error:', e);
     }
 
     return NextResponse.json({ success: true, message: 'Products updated successfully' });

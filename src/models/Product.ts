@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import './Category';
 
 export interface IProduct extends Document {
   name: string;
@@ -12,6 +13,7 @@ export interface IProduct extends Document {
   stockStatus: 'In Stock' | 'Out of Stock' | 'Call for Availability';
   category: mongoose.Types.ObjectId;
   subcategory?: mongoose.Types.ObjectId;
+  subsubcategory?: mongoose.Types.ObjectId;
   isTrending: boolean;
 }
 
@@ -32,6 +34,7 @@ const ProductSchema: Schema = new Schema(
     },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
     subcategory: { type: Schema.Types.ObjectId, ref: 'Category', default: null },
+    subsubcategory: { type: Schema.Types.ObjectId, ref: 'Category', default: null },
     isTrending: { type: Boolean, default: false },
   },
   { timestamps: true }

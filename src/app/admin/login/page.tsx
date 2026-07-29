@@ -3,18 +3,19 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Lock, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('saitsolutions@gmail.com');
+  const [password, setPassword] = useState('saitsolutions2026');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password.trim()) return;
+    if (!email.trim() || !password.trim()) return;
 
     setError('');
     setIsSubmitting(true);
@@ -23,14 +24,14 @@ export default function AdminLoginPage() {
       const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email: email.trim(), password: password.trim() }),
       });
 
       const data = await response.json();
       if (response.ok && data.success) {
         router.push('/admin');
       } else {
-        setError(data.error || 'Invalid credentials');
+        setError(data.error || 'Invalid administrator ID or password');
       }
     } catch (err) {
       setError('Connection failed. Try again.');
@@ -40,7 +41,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="w-full min-h-[70vh] flex items-center justify-center px-4 py-16 text-slate-800">
+    <div className="w-full min-h-[75vh] flex items-center justify-center px-4 py-16 text-slate-800">
       <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md p-8 shadow-xl space-y-6">
         
         {/* Header Branding */}
@@ -52,16 +53,16 @@ export default function AdminLoginPage() {
             height={45}
             className="object-contain mx-auto mb-4 filter brightness-95"
           />
-          <h1 className="text-xl font-extrabold text-slate-900">Admin Dashboard</h1>
-          <p className="text-xs text-slate-455 font-medium leading-relaxed">
-            Enter administrator password to edit pricing and view product requests.
+          <h1 className="text-xl font-extrabold text-slate-900">Admin Store Portal</h1>
+          <p className="text-xs text-slate-500 font-medium leading-relaxed">
+            Enter administrator credentials to access inventory, manage categories, and handle customer enquiries.
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="bg-rose-50 border border-rose-200 text-rose-600 p-3 rounded-lg flex items-center gap-2 text-xs">
-            <AlertTriangle className="w-4 h-4 shrink-0" />
+          <div className="bg-rose-50 border border-rose-200 text-rose-600 p-3 rounded-lg flex items-center gap-2 text-xs font-semibold">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500" />
             <span>{error}</span>
           </div>
         )}
@@ -69,7 +70,24 @@ export default function AdminLoginPage() {
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div className="space-y-1">
-            <label className="block text-slate-500 font-bold mb-1">Password</label>
+            <label className="block text-slate-600 font-bold mb-1">Admin Email / ID</label>
+            <div className="relative">
+              <span className="absolute left-3.5 top-3.5 text-slate-400">
+                <Mail className="w-4 h-4" />
+              </span>
+              <input
+                type="email"
+                required
+                placeholder="saitsolutions@gmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-600 focus:bg-white transition-all shadow-sm font-medium"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-slate-600 font-bold mb-1">Password</label>
             <div className="relative">
               <span className="absolute left-3.5 top-3.5 text-slate-400">
                 <Lock className="w-4 h-4" />
@@ -80,7 +98,7 @@ export default function AdminLoginPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-205 rounded-xl pl-10 pr-10 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-accent focus:bg-white transition-all shadow-sm"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-600 focus:bg-white transition-all shadow-sm font-medium"
               />
               <button
                 type="button"
@@ -95,14 +113,18 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-brand-purple-light to-brand-purple-dark text-white rounded-xl py-3 hover:brightness-110 transition-all font-bold text-xs uppercase tracking-wider cursor-pointer disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-purple-700 to-indigo-800 text-white rounded-xl py-3.5 hover:brightness-110 transition-all font-bold text-xs uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-md shadow-purple-900/10 mt-2"
           >
-            {isSubmitting ? 'Logging in...' : 'Sign In'}
+            {isSubmitting ? 'Authenticating...' : 'Sign In to Admin Dashboard'}
           </button>
         </form>
 
-        <div className="text-center text-[10px] text-slate-400">
-          Default password: <code className="bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">admin123</code>
+        <div className="bg-purple-50/60 border border-purple-100 rounded-xl p-3 text-center text-[11px] text-purple-900 space-y-1 font-medium">
+          <div><strong>Authorized Admin Credentials:</strong></div>
+          <div className="flex justify-center gap-3 text-[10px] text-purple-800">
+            <span>ID: <code className="bg-white px-1.5 py-0.5 rounded border border-purple-200 font-bold">saitsolutions@gmail.com</code></span>
+            <span>Pass: <code className="bg-white px-1.5 py-0.5 rounded border border-purple-200 font-bold">saitsolutions2026</code></span>
+          </div>
         </div>
       </div>
     </div>

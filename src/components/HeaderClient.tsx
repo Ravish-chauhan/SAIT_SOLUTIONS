@@ -331,7 +331,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
             <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/support" className="hover:text-[#5b21b6] transition-colors py-4 h-full flex items-center">Our Stores</Link>
+          <Link href="/categories" className="hover:text-[#5b21b6] transition-colors py-4 h-full flex items-center font-extrabold text-purple-700">Our Store</Link>
         </nav>
 
         {/* Right Spacer to mathematically balance the centered navigation links */}

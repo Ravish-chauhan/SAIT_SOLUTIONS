@@ -101,6 +101,12 @@ export default function Footer() {
                 Gaming Monitors & Displays
               </Link>
             </li>
+            <li className="pt-1">
+              <Link href="/categories" className="text-purple-400 hover:text-purple-300 transition-colors font-bold flex items-center gap-1">
+                <span>View All Categories</span>
+                <span>→</span>
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -110,6 +116,11 @@ export default function Footer() {
             Company & Services
           </h3>
           <ul className="space-y-2.5 text-xs font-medium text-zinc-300">
+            <li>
+              <Link href="/products" className="hover:text-purple-300 transition-colors font-bold text-white">
+                📦 All Hardware Catalog
+              </Link>
+            </li>
             <li>
               <Link href="/about" className="hover:text-white transition-colors">
                 About Our Business
@@ -121,8 +132,8 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/admin" className="hover:text-white transition-colors">
-                Admin Portal
+              <Link href="/admin" className="hover:text-purple-300 transition-colors flex items-center gap-1.5 font-bold text-zinc-200">
+                <span>🔐 Store Admin Portal</span>
               </Link>
             </li>
             <li>
