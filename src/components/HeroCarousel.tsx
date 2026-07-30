@@ -26,7 +26,7 @@ export default function HeroCarousel() {
       subtitle: 'High-performance peripherals engineered for gamers and creators who demand the best.',
       ctaText: 'Shop Gaming →',
       link: '/category/peripherals',
-      imagePath: '/gaming_gear.png',
+      imagePath: 'https://res.cloudinary.com/gjcmtip1/image/upload/v1785424063/gaming_gear_efaout.webp',
     },
     {
       id: 2,
@@ -36,7 +36,7 @@ export default function HeroCarousel() {
       subtitle: 'High-quality audio gear for music lovers, gamers, creators, and everyone in between.',
       ctaText: 'EXPLORE AUDIO →',
       link: '/category/peripherals',
-      imagePath: '/sound-banner.png',
+      imagePath: 'https://res.cloudinary.com/gjcmtip1/image/upload/v1785424063/sound-banner_zyhrjp.webp',
     },
     {
       id: 3,
@@ -46,7 +46,7 @@ export default function HeroCarousel() {
       subtitle: 'Experience extreme detail and lifleike display quality.',
       ctaText: 'SHOP NOW →',
       link: '/category/monitors-display',
-      imagePath: '/monitor_banner.png',
+      imagePath: 'https://res.cloudinary.com/gjcmtip1/image/upload/v1785424063/monitor_banner_qqymmr.webp',
     },
     {
       id: 4,
@@ -56,7 +56,7 @@ export default function HeroCarousel() {
       subtitle: 'Advanced CCTV & security systems for complete protection of what matters most.',
       ctaText: 'SHOP NOW →',
       link: '/category/network-security',
-      imagePath: '/cctv-security.png',
+      imagePath: 'https://res.cloudinary.com/gjcmtip1/image/upload/v1785424063/cctv-security_aby8tv.webp',
     },
     {
       id: 5,
@@ -66,16 +66,24 @@ export default function HeroCarousel() {
       subtitle: 'Choose premium components and create a PC tailored for gaming, work or creation.',
       ctaText: 'BUILD YOUR PC →',
       link: '/category/pc-components',
-      imagePath: '/custom-pc.png',
+      imagePath: 'https://res.cloudinary.com/gjcmtip1/image/upload/v1785424063/custom-pc_dwz4cy.webp',
     },
   ];
 
   useEffect(() => {
+    // Preload Cloudinary images in browser memory for instant transitions & 0 Vercel bandwidth
+    slides.forEach((slide) => {
+      if (typeof window !== 'undefined') {
+        const img = new window.Image();
+        img.src = slide.imagePath;
+      }
+    });
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, []);
 
   return (
     <div className="relative w-full h-[180px] sm:h-[300px] md:h-[420px] lg:h-[530px] bg-zinc-950 overflow-hidden border-b border-slate-200 select-none">

@@ -34,10 +34,12 @@ export async function POST(request: Request) {
     const mimeType = file.type || 'image/jpeg';
     const base64Data = `data:${mimeType};base64,${buffer.toString('base64')}`;
 
-    // Upload directly using Cloudinary SDK
+    // Upload directly using Cloudinary SDK with automatic WebP conversion
     const uploadResponse = await cloudinary.uploader.upload(base64Data, {
       folder: 'sait_solutions_products',
-      resource_type: 'auto',
+      resource_type: 'image',
+      format: 'webp',
+      quality: 80,
     });
 
     return NextResponse.json({

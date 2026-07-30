@@ -11,7 +11,7 @@ import NewArrivalsCarousel from '@/components/NewArrivalsCarousel';
 import NeedHelpSection from '@/components/NeedHelpSection';
 import ValueTrustStrip from '@/components/ValueTrustStrip';
 
-export const revalidate = 3600; // ISR: Revalidate page every hour
+export const revalidate = 2592000; // 30 Days ISR Edge Cache
 
 export default async function HomePage() {
   return (

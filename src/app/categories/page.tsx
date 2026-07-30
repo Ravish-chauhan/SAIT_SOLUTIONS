@@ -2,7 +2,7 @@ import React from 'react';
 import AllCategoriesClient from '@/components/AllCategoriesClient';
 import { getCachedMainCategories } from '@/lib/cache';
 
-export const revalidate = 3600; // ISR cache: cached statically on edge, automatically invalidated when admin mutates categories
+export const revalidate = 2592000; // 30 Days ISR Edge Cache - automatically invalidated on admin edits
 
 export default async function CategoriesPage() {
   let categories: any[] = [];

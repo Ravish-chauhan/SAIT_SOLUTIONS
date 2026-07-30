@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getCachedMainCategories, getCachedCategoryPageData } from '@/lib/cache';
 import CategoryListingClient from '@/components/CategoryListingClient';
 
-export const revalidate = 3600;
+export const revalidate = 2592000; // 30 Days ISR Edge Cache
 
 export async function generateStaticParams() {
   return [

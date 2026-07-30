@@ -3,7 +3,10 @@ import dbConnect from '@/lib/db';
 import Category from '@/models/Category';
 import Product from '@/models/Product';
 
-// 1. Cached Main Categories Taxonomy (1 hour cache, tag 'categories')
+// 30 Days Revalidation in seconds (30 days * 24h * 60m * 60s)
+const THIRTY_DAYS_SECONDS = 2592000;
+
+// 1. Cached Main Categories Taxonomy (30 days cache, tag 'categories')
 export const getCachedMainCategories = unstable_cache(
   async () => {
     try {
@@ -18,10 +21,10 @@ export const getCachedMainCategories = unstable_cache(
     }
   },
   ['sait-main-categories-key'],
-  { revalidate: 3600, tags: ['categories'] }
+  { revalidate: THIRTY_DAYS_SECONDS, tags: ['categories'] }
 );
 
-// 2. Cached Full Category Tree by Slug (1 hour cache, tag 'categories')
+// 2. Cached Full Category Tree by Slug (30 days cache, tag 'categories')
 export const getCachedCategoryBySlug = unstable_cache(
   async (slug: string) => {
     try {
@@ -67,10 +70,10 @@ export const getCachedCategoryBySlug = unstable_cache(
     }
   },
   ['sait-category-tree-key'],
-  { revalidate: 3600, tags: ['categories'] }
+  { revalidate: THIRTY_DAYS_SECONDS, tags: ['categories'] }
 );
 
-// 3. Cached Full Category Page Data (1 hour cache, tags ['categories', 'products'])
+// 3. Cached Full Category Page Data (30 days cache, tags ['categories', 'products'])
 export const getCachedCategoryPageData = unstable_cache(
   async (slug: string) => {
     try {
@@ -168,10 +171,10 @@ export const getCachedCategoryPageData = unstable_cache(
     }
   },
   ['sait-category-page-data-key'],
-  { revalidate: 3600, tags: ['categories', 'products'] }
+  { revalidate: THIRTY_DAYS_SECONDS, tags: ['categories', 'products'] }
 );
 
-// 4. Cached Subcategory Page Data (1 hour cache, tags ['categories', 'products'])
+// 4. Cached Subcategory Page Data (30 days cache, tags ['categories', 'products'])
 export const getCachedSubcategoryPageData = unstable_cache(
   async (subslug: string) => {
     try {
@@ -214,10 +217,10 @@ export const getCachedSubcategoryPageData = unstable_cache(
     }
   },
   ['sait-subcategory-page-data-key'],
-  { revalidate: 3600, tags: ['categories', 'products'] }
+  { revalidate: THIRTY_DAYS_SECONDS, tags: ['categories', 'products'] }
 );
 
-// 5. Cached Product Detail Page Data (1 hour cache, tags ['products', 'categories'])
+// 5. Cached Product Detail Page Data (30 days cache, tags ['products', 'categories'])
 export const getCachedProductDetailPage = unstable_cache(
   async (slug: string) => {
     try {
@@ -257,5 +260,5 @@ export const getCachedProductDetailPage = unstable_cache(
     }
   },
   ['sait-product-detail-key'],
-  { revalidate: 3600, tags: ['products', 'categories'] }
+  { revalidate: THIRTY_DAYS_SECONDS, tags: ['products', 'categories'] }
 );

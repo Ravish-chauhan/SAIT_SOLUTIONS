@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getCachedProductDetailPage } from '@/lib/cache';
 import ProductDetailClient from '@/components/ProductDetailClient';
 
-export const revalidate = 3600; // 1-hour Edge ISR cache, invalidated automatically when admin edits products
+export const revalidate = 2592000; // 30 Days ISR Edge Cache - automatically invalidated on admin edits
 
 interface ProductPageProps {
   params: Promise<{
