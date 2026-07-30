@@ -179,3 +179,198 @@ export const getCachedPaginatedProducts = (options: {
     { revalidate: 3600, tags: ['products', 'categories'] }
   )();
 };
+
+// 4. Cached Full Category Page Data (1 hour cache, tags ['categories', 'products'])
+export const getCachedCategoryPageData = (slug: string) =>
+  unstable_cache(
+    async () => {
+      try {
+        await dbConnect();
+        const targetCategory = await Category.findOne({ slug }).lean();
+        if (!targetCategory) return null;
+
+        let parentCategoryObj: any = null;
+        let mainCategoryObj: any = null;
+        let subcategories: any[] = [];
+        let products: any[] = [];
+        let activeSubcategorySlug = 'all';
+
+        if (!targetCategory.parent) {
+          mainCategoryObj = targetCategory;
+          const rawSubs = await Category.find({ parent: targetCategory._id }).sort({ order: 1, name: 1 }).lean();
+          subcategories = await Promise.all(
+            rawSubs.map(async (sub) => {
+              const subsubs = await Category.find({ parent: sub._id }).sort({ order: 1, name: 1 }).lean();
+              return {
+                ...sub,
+                _id: sub._id.toString(),
+                subsubcategories: JSON.parse(JSON.stringify(subsubs)),
+              };
+            })
+          );
+          const subcatIds = rawSubs.map((s) => s._id);
+          products = await Product.find({
+            $or: [
+              { category: targetCategory._id },
+              { subcategory: { $in: subcatIds } }
+            ]
+          }).sort({ createdAt: -1 }).lean();
+        } else {
+          const parent = await Category.findById(targetCategory.parent).lean();
+          if (!parent) return null;
+
+          if (!parent.parent) {
+            parentCategoryObj = parent;
+            mainCategoryObj = parent;
+            activeSubcategorySlug = targetCategory.slug;
+
+            const rawSubs = await Category.find({ parent: parent._id }).sort({ order: 1, name: 1 }).lean();
+            subcategories = await Promise.all(
+              rawSubs.map(async (sub) => {
+                const subsubs = await Category.find({ parent: sub._id }).sort({ order: 1, name: 1 }).lean();
+                return {
+                  ...sub,
+                  _id: sub._id.toString(),
+                  subsubcategories: JSON.parse(JSON.stringify(subsubs)),
+                };
+              })
+            );
+
+            const subsubcatIds = (await Category.find({ parent: targetCategory._id })).map((s) => s._id);
+            products = await Product.find({
+              $or: [
+                { subcategory: targetCategory._id },
+                { subsubcategory: { $in: subsubcatIds } }
+              ]
+            }).sort({ createdAt: -1 }).lean();
+          } else {
+            const grandParent = await Category.findById(parent.parent).lean();
+            parentCategoryObj = parent;
+            mainCategoryObj = grandParent || parent;
+            activeSubcategorySlug = parent.slug;
+
+            const rawSubs = await Category.find({ parent: mainCategoryObj._id }).sort({ order: 1, name: 1 }).lean();
+            subcategories = await Promise.all(
+              rawSubs.map(async (sub) => {
+                const subsubs = await Category.find({ parent: sub._id }).sort({ order: 1, name: 1 }).lean();
+                return {
+                  ...sub,
+                  _id: sub._id.toString(),
+                  subsubcategories: JSON.parse(JSON.stringify(subsubs)),
+                };
+              })
+            );
+
+            products = await Product.find({ subsubcategory: targetCategory._id }).sort({ createdAt: -1 }).lean();
+          }
+        }
+
+        return {
+          targetCategory: JSON.parse(JSON.stringify(targetCategory)),
+          mainCategory: mainCategoryObj ? JSON.parse(JSON.stringify(mainCategoryObj)) : null,
+          parentCategory: parentCategoryObj ? JSON.parse(JSON.stringify(parentCategoryObj)) : null,
+          subcategories: JSON.parse(JSON.stringify(subcategories)),
+          products: JSON.parse(JSON.stringify(products)),
+          activeSubcategorySlug,
+        };
+      } catch (error) {
+        console.error('Error in getCachedCategoryPageData:', error);
+        return null;
+      }
+    },
+    [`sait-category-page-data-${slug}`],
+    { revalidate: 3600, tags: ['categories', 'products'] }
+  )();
+
+// 5. Cached Subcategory Page Data (1 hour cache, tags ['categories', 'products'])
+export const getCachedSubcategoryPageData = (subslug: string) =>
+  unstable_cache(
+    async () => {
+      try {
+        await dbConnect();
+        const targetCategory = await Category.findOne({ slug: subslug }).lean();
+        if (!targetCategory || !targetCategory.parent) return null;
+
+        const parentCategory = await Category.findById(targetCategory.parent).lean();
+        if (!parentCategory) return null;
+
+        const rawSubs = await Category.find({ parent: parentCategory._id }).sort({ order: 1, name: 1 }).lean();
+        const subcategories = await Promise.all(
+          rawSubs.map(async (sub) => {
+            const subsubs = await Category.find({ parent: sub._id }).sort({ order: 1, name: 1 }).lean();
+            return {
+              ...sub,
+              _id: sub._id.toString(),
+              subsubcategories: JSON.parse(JSON.stringify(subsubs)),
+            };
+          })
+        );
+
+        const subsubcatIds = (await Category.find({ parent: targetCategory._id })).map((s) => s._id);
+        const products = await Product.find({
+          $or: [
+            { subcategory: targetCategory._id },
+            { subsubcategory: { $in: subsubcatIds } }
+          ]
+        }).sort({ createdAt: -1 }).lean();
+
+        return {
+          targetCategory: JSON.parse(JSON.stringify(targetCategory)),
+          parentCategory: JSON.parse(JSON.stringify(parentCategory)),
+          subcategories: JSON.parse(JSON.stringify(subcategories)),
+          products: JSON.parse(JSON.stringify(products)),
+        };
+      } catch (error) {
+        console.error('Error in getCachedSubcategoryPageData:', error);
+        return null;
+      }
+    },
+    [`sait-subcategory-page-data-${subslug}`],
+    { revalidate: 3600, tags: ['categories', 'products'] }
+  )();
+
+// 6. Cached Product Detail Page Data (1 hour cache, tags ['products', 'categories'])
+export const getCachedProductDetailPage = (slug: string) =>
+  unstable_cache(
+    async () => {
+      try {
+        await dbConnect();
+        const product = await Product.findOne({ slug }).lean();
+        if (!product) return null;
+
+        const categoryDoc = await Category.findById(product.category).lean();
+        const subcategoryDoc = product.subcategory
+          ? await Category.findById(product.subcategory).lean()
+          : null;
+
+        const relatedProducts = await Product.find({
+          category: product.category,
+          _id: { $ne: product._id },
+        })
+          .limit(4)
+          .lean();
+
+        const serializedProduct = {
+          ...JSON.parse(JSON.stringify(product)),
+          category: categoryDoc
+            ? { _id: categoryDoc._id.toString(), name: categoryDoc.name, slug: categoryDoc.slug }
+            : { _id: '', name: 'Hardware', slug: 'all' },
+          subcategory: subcategoryDoc
+            ? { _id: subcategoryDoc._id.toString(), name: subcategoryDoc.name, slug: subcategoryDoc.slug }
+            : undefined,
+        };
+
+        return {
+          product: serializedProduct,
+          relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
+        };
+      } catch (error) {
+        console.error('Error in getCachedProductDetailPage:', error);
+        return null;
+      }
+    },
+    [`sait-product-detail-${slug}`],
+    { revalidate: 3600, tags: ['products', 'categories'] }
+  )();
+
+

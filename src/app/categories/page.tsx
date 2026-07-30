@@ -1,24 +1,18 @@
 import React from 'react';
-import dbConnect from '@/lib/db';
-import Category from '@/models/Category';
 import AllCategoriesClient from '@/components/AllCategoriesClient';
+import { getCachedMainCategories } from '@/lib/cache';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0; // Fetch fresh category data on every request so admin image updates show immediately
+export const revalidate = 3600; // ISR cache: cached statically on edge, automatically invalidated when admin mutates categories
 
 export default async function CategoriesPage() {
   let categories: any[] = [];
 
   try {
-    await dbConnect();
-    const parentCategories = await Category.find({ parent: null })
-      .sort({ order: 1, name: 1 })
-      .lean();
-
-    categories = JSON.parse(JSON.stringify(parentCategories));
+    categories = await getCachedMainCategories();
   } catch (error) {
     console.error("Failed to load category taxonomy:", error);
   }
 
   return <AllCategoriesClient categories={categories} />;
 }
+
