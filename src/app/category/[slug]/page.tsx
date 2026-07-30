@@ -5,6 +5,17 @@ import CategoryListingClient from '@/components/CategoryListingClient';
 
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  return [
+    { slug: 'pc-components' },
+    { slug: 'storage-nas' },
+    { slug: 'peripherals' },
+    { slug: 'monitors-display' },
+    { slug: 'network-security' },
+    { slug: 'accessories' },
+  ];
+}
+
 interface CategoryPageProps {
   params: Promise<{
     slug: string;
