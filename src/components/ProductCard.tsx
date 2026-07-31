@@ -163,10 +163,10 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 sm:w-full bg-[#5b21b6] hover:bg-[#4c1d95] text-white rounded-xl py-2.5 px-4 transition-all text-xs font-black tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+              className="flex-1 sm:w-full bg-[#5b21b6] hover:bg-[#4c1d95] text-white rounded-xl py-2 sm:py-2.5 px-3 transition-all text-[10.5px] sm:text-xs font-black tracking-wide flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer shadow-sm whitespace-nowrap"
             >
-              <Send className="w-3.5 h-3.5 shrink-0" />
-              <span>WhatsApp Query</span>
+              <Send className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+              <span>Send Enquiry</span>
             </a>
           </div>
         </div>
@@ -263,10 +263,10 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full bg-[#5b21b6] hover:bg-[#4c1d95] text-white rounded-lg sm:rounded-xl py-2.5 transition-all text-xs font-black tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+          className="w-full bg-[#5b21b6] hover:bg-[#4c1d95] text-white rounded-lg sm:rounded-xl py-2 sm:py-2.5 px-1.5 transition-all text-[10.5px] sm:text-xs font-black tracking-tight flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer shadow-sm active:scale-95 whitespace-nowrap"
         >
-          <Send className="w-3.5 h-3.5 shrink-0" />
-          <span>WhatsApp Query</span>
+          <Send className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+          <span>Send Enquiry</span>
         </a>
       </div>
     </motion.div>

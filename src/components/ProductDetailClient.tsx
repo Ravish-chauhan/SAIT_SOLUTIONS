@@ -295,7 +295,7 @@ export default function ProductDetailClient({ product, relatedProducts }: Produc
               className="w-full bg-[#5b21b6] hover:bg-[#4c1d95] text-white rounded-2xl py-3.5 px-6 font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg transition-all hover:scale-[1.01] active:scale-95"
             >
               <Send className="w-4 h-4" />
-              <span>WhatsApp Query</span>
+              <span>Send Enquiry</span>
             </a>
 
             {/* Wishlist CTA */}
