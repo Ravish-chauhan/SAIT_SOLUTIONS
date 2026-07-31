@@ -25,6 +25,31 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  const updateWishlistCount = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('sait_wishlist');
+        if (stored) {
+          const dict = JSON.parse(stored);
+          setWishlistCount(Object.keys(dict).length);
+        } else {
+          setWishlistCount(0);
+        }
+      } catch (e) {
+        setWishlistCount(0);
+      }
+    }
+  };
+
+  useEffect(() => {
+    updateWishlistCount();
+    const handleStorage = () => updateWishlistCount();
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -206,8 +231,13 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
 
         {/* Wishlist Link */}
         <Link href="/wishlist" className="flex items-center gap-2.5 shrink-0 hover:text-accent transition-colors text-left text-slate-800 group">
-          <div className="p-2 border border-slate-200 rounded-full group-hover:border-accent group-hover:bg-accent/5 transition-all">
+          <div className="p-2 border border-slate-200 rounded-full group-hover:border-accent group-hover:bg-accent/5 transition-all relative">
             <Heart className="w-4 h-4 text-slate-600 group-hover:text-accent" />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[#5b21b6] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                {wishlistCount}
+              </span>
+            )}
           </div>
           <div>
             <p className="text-[10px] text-slate-400 font-semibold leading-none font-sans">Favorites</p>
@@ -305,6 +335,19 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
               <span className="absolute bottom-0 left-[-4px] right-[-4px] h-[2px] bg-[#5b21b6] rounded-full" />
             )}
           </Link>
+
+          {/* OUR STORE - Placed right next to Home */}
+          <Link 
+            href="/categories" 
+            className={`relative hover:text-[#5b21b6] transition-colors py-4 flex items-center h-full ${
+              pathname === '/categories' ? 'text-[#5b21b6] font-extrabold' : 'text-slate-600'
+            }`}
+          >
+            <span>Our Store</span>
+            {pathname === '/categories' && (
+              <span className="absolute bottom-0 left-[-4px] right-[-4px] h-[2px] bg-[#5b21b6] rounded-full" />
+            )}
+          </Link>
           
           <Link href="/category/pc-components" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
             <span>PC Components</span>
@@ -330,59 +373,88 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
             <span>Network & Security</span>
             <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
-          
-          <Link href="/categories" className="hover:text-[#5b21b6] transition-colors py-4 h-full flex items-center font-extrabold text-purple-700">Our Store</Link>
         </nav>
 
         {/* Right Spacer to mathematically balance the centered navigation links */}
         <div className="hidden lg:block w-[280px] shrink-0 h-full" />
       </div>
 
-      {/* Mobile Drawer (Clean light theme) */}
+      {/* Mobile Sidebar Drawer (Smooth slide animation, logo-free header, no admin link) */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex justify-end">
-          <div className="w-full max-w-sm bg-white border-l border-slate-200 h-full flex flex-col p-6 overflow-y-auto animate-in slide-in-from-right duration-200 text-slate-800">
-            <div className="flex justify-between items-center pb-4 border-b border-slate-100 mb-6">
-              <Image
-                src="/logo.png"
-                alt="Sait Solutions Logo"
-                width={100}
-                height={32}
-                className="object-contain"
-              />
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex justify-start animate-in fade-in duration-200">
+          <div className="w-full max-w-xs bg-white border-r border-slate-200 h-full flex flex-col p-6 overflow-y-auto animate-in slide-in-from-left duration-300 text-slate-800 shadow-2xl">
+            {/* Sidebar Header with Navbar-Proportioned Logo */}
+            <div className="flex justify-between items-center pb-4 border-b border-slate-100 mb-5">
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 select-none shrink-0 group">
+                <Image
+                  src="/logo.png"
+                  alt="SA Monogram"
+                  width={28}
+                  height={28}
+                  className="object-contain"
+                  priority
+                />
+                <div className="h-4 w-px bg-slate-300" />
+                <span className="text-xs font-black tracking-wider text-slate-800 uppercase font-sans">
+                  SAIT SOLUTIONS
+                </span>
+              </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-slate-400 hover:text-slate-950 transition-colors"
+                className="text-slate-400 hover:text-slate-950 transition-colors p-1 cursor-pointer"
+                aria-label="Close Menu"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Mobile Links */}
-            <nav className="flex flex-col gap-4 text-slate-700 font-semibold text-sm">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors py-2 border-b border-slate-50">Home</Link>
+            {/* Mobile Navigation Links */}
+            <nav className="flex flex-col gap-1 text-slate-700 font-semibold text-sm">
+              <Link 
+                href="/" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className={`hover:text-[#5b21b6] transition-colors py-2.5 border-b border-slate-100 flex items-center justify-between ${
+                  isHome ? 'text-[#5b21b6] font-extrabold' : 'text-slate-800'
+                }`}
+              >
+                <span>Home</span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </Link>
               
-              <div className="space-y-2">
-                <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Product Categories</span>
+              {/* OUR STORE - Placed right below Home */}
+              <Link 
+                href="/categories" 
+                onClick={() => setIsMobileMenuOpen(false)} 
+                className={`hover:text-[#5b21b6] transition-colors py-2.5 border-b border-slate-100 flex items-center justify-between ${
+                  pathname === '/categories' ? 'text-[#5b21b6] font-extrabold' : 'text-slate-800'
+                }`}
+              >
+                <span>Our Store</span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </Link>
+
+              {/* Product Categories Section */}
+              <div className="space-y-2 pt-3">
+                <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider block">Product Categories</span>
                 {categories.map((cat) => (
                   <div key={cat._id} className="border-b border-slate-50 pb-2">
                     <button
                       onClick={() => setActiveMobileCategory(activeMobileCategory === cat._id ? null : cat._id)}
-                      className="w-full flex justify-between items-center hover:text-accent transition-colors py-1.5 text-left text-sm"
+                      className="w-full flex justify-between items-center hover:text-[#5b21b6] transition-colors py-1.5 text-left text-sm"
                     >
                       <span className="flex items-center font-bold text-slate-800">{getCategoryIcon(cat.slug)}{cat.name}</span>
-                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${activeMobileCategory === cat._id ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${activeMobileCategory === cat._id ? 'rotate-180 text-[#5b21b6]' : ''}`} />
                     </button>
                     {activeMobileCategory === cat._id && (
                       <ul className="mt-1 ml-6 space-y-2 text-slate-500 text-xs animate-in fade-in duration-200">
                         <li>
-                          <Link href={`/category/${cat.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors block py-1 font-semibold text-accent">
+                          <Link href={`/category/${cat.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#5b21b6] transition-colors block py-1 font-semibold text-[#5b21b6]">
                             View All {cat.name}
                           </Link>
                         </li>
                         {cat.subcategories.map((sub) => (
                           <li key={sub._id}>
-                            <Link href={`/category/${cat.slug}/${sub.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors block py-1">
+                            <Link href={`/category/${cat.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="hover:text-[#5b21b6] transition-colors block py-1">
                               {sub.name}
                             </Link>
                           </li>
@@ -392,9 +464,6 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
                   </div>
                 ))}
               </div>
-
-              <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-accent transition-colors py-2 border-b border-slate-50">Our Stores</Link>
-              <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="py-2 border-b border-slate-50 text-accent font-bold">Admin Dashboard</Link>
             </nav>
           </div>
         </div>

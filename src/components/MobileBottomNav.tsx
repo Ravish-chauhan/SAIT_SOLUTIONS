@@ -3,7 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutGrid, Heart, MessageCircle } from 'lucide-react';
+import { Home, LayoutGrid, Heart } from 'lucide-react';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
@@ -54,12 +55,12 @@ export default function MobileBottomNav() {
 
       {/* 4. WhatsApp / Contact */}
       <a
-        href="https://wa.me/919876543210?text=Hi%20Sait%20Solutions%2C%20I%20have%20an%20inquiry."
+        href="https://wa.me/919369991770?text=Hi%20Sait%20Solutions%2C%20I%20have%20an%20inquiry."
         target="_blank"
         rel="noopener noreferrer"
         className="flex flex-col items-center gap-0.5 text-[#25d366] hover:text-[#1da851] transition-all px-3 py-1 rounded-xl cursor-pointer font-bold"
       >
-        <MessageCircle className="w-5 h-5 stroke-[2.5]" />
+        <WhatsAppIcon className="w-5 h-5 fill-current" />
         <span className="text-[10px] tracking-tight">Contact</span>
       </a>
     </div>

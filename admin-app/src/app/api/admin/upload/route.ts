@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { v2 as cloudinary } from 'cloudinary';
 
-// Configure Cloudinary using standard 3 environment variables
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -28,18 +27,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'No file provided' }, { status: 400 });
     }
 
-    // Convert file buffer to base64 data URI
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const mimeType = file.type || 'image/jpeg';
+    const mimeType = file.type || 'image/webp';
     const base64Data = `data:${mimeType};base64,${buffer.toString('base64')}`;
 
-    // Upload directly using Cloudinary SDK with automatic WebP conversion
     const uploadResponse = await cloudinary.uploader.upload(base64Data, {
       folder: 'sait_solutions_products',
       resource_type: 'image',
-      format: 'webp',
-      quality: 80,
+      transformation: [
+        { quality: 'auto', fetch_format: 'auto' }
+      ]
     });
 
     return NextResponse.json({

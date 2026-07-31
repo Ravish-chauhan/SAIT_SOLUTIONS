@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { MessageSquare, Heart } from 'lucide-react';
-import EnquiryModal from './EnquiryModal';
+import { Heart, Send } from 'lucide-react';
 
 export interface ProductCardProps {
   product: {
@@ -24,8 +23,21 @@ export interface ProductCardProps {
 }
 
 export default function ProductCard({ product, viewMode = 'grid' }: ProductCardProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('sait_wishlist');
+        if (stored) {
+          const list = JSON.parse(stored);
+          setIsWishlisted(!!list[product._id]);
+        }
+      } catch (e) {
+        console.error('Wishlist error:', e);
+      }
+    }
+  }, [product._id]);
 
   const discount = product.offerPrice && product.mrp > product.offerPrice
     ? Math.round(((product.mrp - product.offerPrice) / product.mrp) * 100)
@@ -34,17 +46,38 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted(!isWishlisted);
+    const nextState = !isWishlisted;
+    setIsWishlisted(nextState);
+
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('sait_wishlist');
+        const list = stored ? JSON.parse(stored) : {};
+        if (nextState) {
+          list[product._id] = product;
+        } else {
+          delete list[product._id];
+        }
+        localStorage.setItem('sait_wishlist', JSON.stringify(list));
+      } catch (e) {
+        console.error('Wishlist error:', e);
+      }
+    }
   };
 
-  // LIST VIEW HORIZONTAL LAYOUT (Image on left, Content in middle, CTA on right)
+  const whatsappNumber = '919876543210';
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    `Hi Sait Solutions, I am interested in "${product.name}" (Brand: ${product.brand}). Price: ₹${(product.offerPrice || product.mrp).toLocaleString('en-IN')}. Link: ${typeof window !== 'undefined' ? `${window.location.origin}/product/${product.slug}` : ''}`
+  )}`;
+
+  // LIST VIEW HORIZONTAL LAYOUT
   if (viewMode === 'list') {
     return (
       <motion.div
         whileHover={{ y: -3, transition: { duration: 0.2, ease: 'easeOut' } }}
-        className="bg-white border border-slate-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-5 hover:shadow-xl transition-all duration-300 relative group w-full"
+        className="bg-white border border-slate-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-5 hover:shadow-xl transition-all duration-300 relative group w-full font-sans"
       >
-        {/* Left Side: Product Image Container */}
+        {/* Left Side: Image */}
         <Link href={`/product/${product.slug}`} className="w-full sm:w-48 h-40 relative flex items-center justify-center bg-slate-50/60 rounded-xl overflow-hidden shrink-0 border border-slate-100 p-2">
           {discount > 0 && (
             <span className="absolute top-2.5 left-2.5 bg-[#5b21b6] text-white text-[8px] sm:text-[9px] font-black tracking-wider px-2 py-0.5 rounded-full z-10 shadow-sm">
@@ -60,19 +93,18 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
           />
         </Link>
 
-        {/* Middle: Product Content & Details */}
+        {/* Middle: Content */}
         <div className="flex-1 space-y-2 w-full">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[9px] text-slate-400 uppercase tracking-widest font-black block">
               {product.brand}
             </span>
-            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
-              product.stockStatus === 'In Stock'
+            <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${product.stockStatus === 'In Stock'
                 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
                 : product.stockStatus === 'Call for Availability'
-                ? 'bg-amber-50 text-amber-600 border border-amber-100'
-                : 'bg-rose-50 text-rose-600 border border-rose-100'
-            }`}>
+                  ? 'bg-amber-50 text-amber-600 border border-amber-100'
+                  : 'bg-rose-50 text-rose-600 border border-rose-100'
+              }`}>
               {product.stockStatus}
             </span>
           </div>
@@ -87,20 +119,9 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
           <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium">
             {product.description}
           </p>
-
-          {/* Quick Specs Snippet if available */}
-          {product.specs && Object.keys(product.specs).length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              {Object.entries(product.specs).slice(0, 3).map(([key, val]) => (
-                <span key={key} className="bg-slate-100/70 text-slate-600 text-[10px] font-semibold px-2.5 py-0.5 rounded-md">
-                  <strong className="text-slate-400 uppercase font-bold">{key}:</strong> {val}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* Right Side: Price & Action CTA */}
+        {/* Right Side: Price & Direct WhatsApp CTA */}
         <div className="w-full sm:w-48 flex flex-row sm:flex-col justify-between sm:justify-center items-center sm:items-end gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 sm:border-l border-slate-100 sm:pl-5 shrink-0">
           <div className="flex flex-col items-start sm:items-end">
             <div className="flex items-baseline gap-1.5">
@@ -129,35 +150,26 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
               whileTap={{ scale: 0.85 }}
               whileHover={{ scale: 1.1 }}
               onClick={toggleWishlist}
-              className={`p-2 rounded-full border transition-all cursor-pointer ${
-                isWishlisted
+              className={`p-2 rounded-full border transition-all cursor-pointer ${isWishlisted
                   ? 'bg-red-50 border-red-200 text-red-500 shadow-sm'
                   : 'bg-white border-slate-200 hover:border-red-200 text-slate-400 hover:text-red-500 hover:bg-red-50/50'
-              }`}
+                }`}
               title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
             >
               <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-red-500 text-red-500' : ''}`} />
             </motion.button>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setIsModalOpen(true)}
-              className="flex-1 sm:w-full bg-gradient-to-r from-[#5b21b6] to-[#4c1d95] hover:brightness-110 text-white rounded-xl py-2.5 px-4 transition-all text-xs font-black tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 sm:w-full bg-[#5b21b6] hover:bg-[#4c1d95] text-white rounded-xl py-2.5 px-4 transition-all text-xs font-black tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
             >
-              <MessageSquare className="w-3.5 h-3.5 shrink-0" />
-              <span>Enquiry</span>
-            </motion.button>
+              <Send className="w-3.5 h-3.5 shrink-0" />
+              <span>WhatsApp Query</span>
+            </a>
           </div>
         </div>
-
-        {/* Enquiry Modal */}
-        {isModalOpen && (
-          <EnquiryModal
-            product={product}
-            onClose={() => setIsModalOpen(false)}
-          />
-        )}
       </motion.div>
     );
   }
@@ -166,7 +178,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   return (
     <motion.div
       whileHover={{ y: -5, transition: { duration: 0.2, ease: 'easeOut' } }}
-      className="bg-white border border-slate-100 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between hover:shadow-xl transition-all duration-300 relative group h-full"
+      className="bg-white border border-slate-100 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between hover:shadow-xl transition-all duration-300 relative group h-full font-sans"
     >
       <div>
         {/* Purple Discount Badge */}
@@ -177,13 +189,12 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
         )}
 
         {/* Stock Status Badge */}
-        <span className={`absolute top-3 right-3 sm:top-4 sm:right-4 text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full z-10 ${
-          product.stockStatus === 'In Stock'
+        <span className={`absolute top-3 right-3 sm:top-4 sm:right-4 text-[8px] sm:text-[9px] font-bold px-2 py-0.5 rounded-full z-10 ${product.stockStatus === 'In Stock'
             ? 'bg-emerald-50 text-emerald-600 border border-emerald-100'
             : product.stockStatus === 'Call for Availability'
-            ? 'bg-amber-50 text-amber-600 border border-amber-100'
-            : 'bg-rose-50 text-rose-600 border border-rose-100'
-        }`}>
+              ? 'bg-amber-50 text-amber-600 border border-amber-100'
+              : 'bg-rose-50 text-rose-600 border border-rose-100'
+          }`}>
           {product.stockStatus}
         </span>
 
@@ -212,7 +223,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
         </div>
       </div>
 
-      {/* Bottom Price, Wishlist and Send Enquiry CTA */}
+      {/* Bottom Price, Wishlist and Direct WhatsApp Query CTA */}
       <div className="mt-4 pt-3 border-t border-slate-50 space-y-2 sm:space-y-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-baseline gap-1.5">
@@ -237,36 +248,27 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
             whileTap={{ scale: 0.85 }}
             whileHover={{ scale: 1.1 }}
             onClick={toggleWishlist}
-            className={`p-1.5 rounded-full border transition-all cursor-pointer ${
-              isWishlisted
+            className={`p-1.5 rounded-full border transition-all cursor-pointer ${isWishlisted
                 ? 'bg-red-50 border-red-200 text-red-500 shadow-sm'
                 : 'bg-white border-slate-100 hover:border-red-200 text-slate-400 hover:text-red-500 hover:bg-red-50/50'
-            }`}
+              }`}
             title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
           >
             <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-red-500 text-red-500' : ''}`} />
           </motion.button>
         </div>
 
-        {/* Send Enquiry CTA Button */}
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => setIsModalOpen(true)}
-          className="w-full bg-gradient-to-r from-[#5b21b6] to-[#4c1d95] hover:brightness-110 text-white rounded-lg sm:rounded-xl py-2.5 transition-all text-xs font-black tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+        {/* Direct WhatsApp Query CTA Button */}
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full bg-[#5b21b6] hover:bg-[#4c1d95] text-white rounded-lg sm:rounded-xl py-2.5 transition-all text-xs font-black tracking-wide flex items-center justify-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
         >
-          <MessageSquare className="w-3.5 h-3.5 shrink-0" />
-          <span>Send Enquiry</span>
-        </motion.button>
+          <Send className="w-3.5 h-3.5 shrink-0" />
+          <span>WhatsApp Query</span>
+        </a>
       </div>
-
-      {/* Enquiry Modal */}
-      {isModalOpen && (
-        <EnquiryModal
-          product={product}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
     </motion.div>
   );
 }

@@ -17,8 +17,8 @@ const TRUST_ITEMS: TrustItem[] = [
   },
   {
     icon: RotateCcw,
-    title: '7 Days Easy Returns',
-    subtitle: 'Hassle-free returns',
+    title: 'Easy Product Exchange',
+    subtitle: 'Defect replacement warranty',
   },
   {
     icon: ShieldCheck,

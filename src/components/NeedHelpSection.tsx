@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { MessageCircle, Phone, Mail } from 'lucide-react';
+import { Phone, Mail } from 'lucide-react';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 export default function NeedHelpSection() {
-  const whatsappNumber = '919876543210';
+  const whatsappNumber = '919369991770';
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     'Hi Sait Solutions, I am looking for assistance regarding product availability.'
   )}`;
@@ -40,20 +41,20 @@ export default function NeedHelpSection() {
                 className="flex items-center gap-3 group"
               >
                 <div className="w-9 h-9 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
-                  <MessageCircle className="w-4.5 h-4.5" />
+                  <WhatsAppIcon className="w-4.5 h-4.5" />
                 </div>
                 <div>
                   <span className="text-xs font-extrabold text-slate-900 block group-hover:text-[#6d28d9] transition-colors leading-none mb-1">
                     WhatsApp
                   </span>
                   <span className="text-xs font-bold text-[#6d28d9] block">
-                    +91 98765 43210
+                    +91 9369991770
                   </span>
                 </div>
               </a>
 
               {/* Call Us */}
-              <a href="tel:+919876543210" className="flex items-center gap-3 group">
+              <a href="tel:+919369991770" className="flex items-center gap-3 group">
                 <div className="w-9 h-9 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
                   <Phone className="w-4.5 h-4.5" />
                 </div>
@@ -68,7 +69,7 @@ export default function NeedHelpSection() {
               </a>
 
               {/* Email Us */}
-              <a href="mailto:support@saitsol.com" className="flex items-center gap-3 group">
+              <a href="mailto:sales@saitsolutions.co.in" className="flex items-center gap-3 group">
                 <div className="w-9 h-9 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
                   <Mail className="w-4.5 h-4.5" />
                 </div>
@@ -77,7 +78,7 @@ export default function NeedHelpSection() {
                     Email Us
                   </span>
                   <span className="text-[11px] font-bold text-[#6d28d9] block">
-                    support@saitsol.com
+                    sales@saitsolutions.co.in
                   </span>
                 </div>
               </a>
@@ -91,7 +92,7 @@ export default function NeedHelpSection() {
                 rel="noopener noreferrer"
                 className="w-full py-3 px-4 rounded-xl border-2 border-[#6d28d9] bg-white hover:bg-purple-50 text-[#6d28d9] font-extrabold text-sm flex items-center justify-center gap-2.5 transition-all shadow-sm active:scale-[0.99] cursor-pointer"
               >
-                <MessageCircle className="w-5 h-5 shrink-0" />
+                <WhatsAppIcon className="w-5 h-5 text-[#25D366] shrink-0" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>
@@ -125,10 +126,10 @@ export default function NeedHelpSection() {
                   Call Us
                 </span>
                 <a
-                  href="tel:+919876543210"
+                  href="tel:+919369991770"
                   className="text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight"
                 >
-                  +91 98765 43210
+                  +91 9369991770
                 </a>
                 <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
                   Mon - Sat (9AM - 7PM)
@@ -146,10 +147,10 @@ export default function NeedHelpSection() {
                   Email Us
                 </span>
                 <a
-                  href="mailto:support@saitsol.com"
+                  href="mailto:sales@saitsolutions.co.in"
                   className="text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight"
                 >
-                  support@saitsol.com
+                  sales@saitsolutions.co.in
                 </a>
                 <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
                   We reply within 24h
@@ -171,7 +172,7 @@ export default function NeedHelpSection() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border-2 border-[#6d28d9] bg-white hover:bg-purple-50 text-[#6d28d9] font-extrabold text-xs transition-all shadow-sm active:scale-95 cursor-pointer mt-1"
               >
-                <MessageCircle className="w-4 h-4 shrink-0" />
+                <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>

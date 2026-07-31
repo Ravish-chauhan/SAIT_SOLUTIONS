@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { revalidateTag, revalidatePath } from 'next/cache';
 import dbConnect from '@/lib/db';
 import Category from '@/models/Category';
+import { triggerRevalidation } from '@/lib/revalidate';
 
 async function verifyAuth() {
   const cookieStore = await cookies();
@@ -97,14 +97,9 @@ export async function POST(request: Request) {
     };
 
     const newCategory = await Category.create(categoryData);
-    
-    try {
-      (revalidateTag as any)('categories');
-      (revalidateTag as any)('products');
-      revalidatePath('/', 'layout');
-    } catch (e) {
-      console.error('Revalidation error:', e);
-    }
+
+    // Bust the website cache so new category appears instantly
+    await triggerRevalidation(['categories']);
 
     return NextResponse.json({ success: true, category: newCategory });
   } catch (error: any) {

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { revalidateTag, revalidatePath } from 'next/cache';
 import dbConnect from '@/lib/db';
 import Category from '@/models/Category';
+import { triggerRevalidation } from '@/lib/revalidate';
 
 async function verifyAuth() {
   const cookieStore = await cookies();
@@ -92,13 +92,8 @@ export async function PUT(
 
     const updatedCategory = await Category.findByIdAndUpdate(id, updateFields, { new: true });
 
-    try {
-      (revalidateTag as any)('categories');
-      (revalidateTag as any)('products');
-      revalidatePath('/', 'layout');
-    } catch (e) {
-      console.error('Revalidation error:', e);
-    }
+    // Bust the website cache so updated category appears instantly
+    await triggerRevalidation(['categories']);
 
     return NextResponse.json({ success: true, category: updatedCategory });
   } catch (error: any) {
@@ -123,13 +118,8 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'Category not found' }, { status: 404 });
     }
 
-    try {
-      (revalidateTag as any)('categories');
-      (revalidateTag as any)('products');
-      revalidatePath('/', 'layout');
-    } catch (e) {
-      console.error('Revalidation error:', e);
-    }
+    // Bust the website cache so deleted category disappears instantly
+    await triggerRevalidation(['categories', 'products']);
 
     return NextResponse.json({ success: true, message: 'Category deleted' });
   } catch (error: any) {

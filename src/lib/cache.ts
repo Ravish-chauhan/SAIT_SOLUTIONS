@@ -14,14 +14,36 @@ export const getCachedMainCategories = unstable_cache(
       const mainCats = await Category.find({ parent: null })
         .sort({ order: 1, name: 1 })
         .lean();
-      return JSON.parse(JSON.stringify(mainCats));
+
+      const categoriesWithCount = await Promise.all(
+        mainCats.map(async (cat) => {
+          const subcatIds = (await Category.find({ parent: cat._id })).map((s) => s._id);
+          const subsubcatIds = (await Category.find({ parent: { $in: subcatIds } })).map((s) => s._id);
+          const allCategoryIds = [cat._id, ...subcatIds, ...subsubcatIds];
+
+          const count = await Product.countDocuments({
+            $or: [
+              { category: { $in: allCategoryIds } },
+              { subcategory: { $in: allCategoryIds } },
+              { subsubcategory: { $in: allCategoryIds } }
+            ]
+          });
+
+          return {
+            ...cat,
+            productCount: count,
+          };
+        })
+      );
+
+      return JSON.parse(JSON.stringify(categoriesWithCount));
     } catch (error) {
       console.error('Error in getCachedMainCategories:', error);
       return [];
     }
   },
   ['sait-main-categories-key'],
-  { revalidate: THIRTY_DAYS_SECONDS, tags: ['categories'] }
+  { revalidate: THIRTY_DAYS_SECONDS, tags: ['categories', 'products'] }
 );
 
 // 2. Cached Full Category Tree by Slug (30 days cache, tag 'categories')
@@ -100,11 +122,16 @@ export const getCachedCategoryPageData = unstable_cache(
             };
           })
         );
+
         const subcatIds = rawSubs.map((s) => s._id);
+        const subsubcatIds = (await Category.find({ parent: { $in: subcatIds } })).map((s) => s._id);
+        const allCategoryIds = [targetCategory._id, ...subcatIds, ...subsubcatIds];
+
         products = await Product.find({
           $or: [
-            { category: targetCategory._id },
-            { subcategory: { $in: subcatIds } }
+            { category: { $in: allCategoryIds } },
+            { subcategory: { $in: allCategoryIds } },
+            { subsubcategory: { $in: allCategoryIds } }
           ]
         }).sort({ createdAt: -1 }).lean();
       } else {
@@ -129,10 +156,13 @@ export const getCachedCategoryPageData = unstable_cache(
           );
 
           const subsubcatIds = (await Category.find({ parent: targetCategory._id })).map((s) => s._id);
+          const allSubIds = [targetCategory._id, ...subsubcatIds];
+
           products = await Product.find({
             $or: [
-              { subcategory: targetCategory._id },
-              { subsubcategory: { $in: subsubcatIds } }
+              { category: { $in: allSubIds } },
+              { subcategory: { $in: allSubIds } },
+              { subsubcategory: { $in: allSubIds } }
             ]
           }).sort({ createdAt: -1 }).lean();
         } else {
@@ -153,7 +183,13 @@ export const getCachedCategoryPageData = unstable_cache(
             })
           );
 
-          products = await Product.find({ subsubcategory: targetCategory._id }).sort({ createdAt: -1 }).lean();
+          products = await Product.find({
+            $or: [
+              { category: targetCategory._id },
+              { subcategory: targetCategory._id },
+              { subsubcategory: targetCategory._id }
+            ]
+          }).sort({ createdAt: -1 }).lean();
         }
       }
 
@@ -197,11 +233,15 @@ export const getCachedSubcategoryPageData = unstable_cache(
         })
       );
 
-      const subsubcatIds = (await Category.find({ parent: targetCategory._id })).map((s) => s._id);
+      const subcatIds = rawSubs.map((s) => s._id);
+      const subsubcatIds = (await Category.find({ parent: { $in: subcatIds } })).map((s) => s._id);
+      const allMainCategoryIds = [parentCategory._id, ...subcatIds, ...subsubcatIds];
+
       const products = await Product.find({
         $or: [
-          { subcategory: targetCategory._id },
-          { subsubcategory: { $in: subsubcatIds } }
+          { category: { $in: allMainCategoryIds } },
+          { subcategory: { $in: allMainCategoryIds } },
+          { subsubcategory: { $in: allMainCategoryIds } }
         ]
       }).sort({ createdAt: -1 }).lean();
 
@@ -262,3 +302,5 @@ export const getCachedProductDetailPage = unstable_cache(
   ['sait-product-detail-key'],
   { revalidate: THIRTY_DAYS_SECONDS, tags: ['products', 'categories'] }
 );
+
+

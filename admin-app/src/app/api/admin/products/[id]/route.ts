@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { revalidateTag, revalidatePath } from 'next/cache';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
+import { triggerRevalidation } from '@/lib/revalidate';
 
 async function verifyAuth() {
   const cookieStore = await cookies();
@@ -38,13 +38,8 @@ export async function PUT(
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
 
-    try {
-      (revalidateTag as any)('products');
-      (revalidateTag as any)('categories');
-      revalidatePath('/', 'layout');
-    } catch (e) {
-      console.error('Revalidation error:', e);
-    }
+    // Bust the website cache so updated product appears instantly
+    await triggerRevalidation(['products', 'categories']);
 
     return NextResponse.json({ success: true, product: updatedProduct });
   } catch (error: any) {
@@ -69,13 +64,8 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
 
-    try {
-      (revalidateTag as any)('products');
-      (revalidateTag as any)('categories');
-      revalidatePath('/', 'layout');
-    } catch (e) {
-      console.error('Revalidation error:', e);
-    }
+    // Bust the website cache so deleted product disappears instantly
+    await triggerRevalidation(['products', 'categories']);
 
     return NextResponse.json({ success: true, message: 'Product deleted' });
   } catch (error: any) {

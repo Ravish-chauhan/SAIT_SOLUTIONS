@@ -217,9 +217,16 @@ export default function CategoryListingClient({
     setCurrentPage(1);
   };
 
-  const handleSelectSubcat = (slug: string) => {
-    setSelectedSubcat(slug);
+  const handleSelectSubcat = (subSlug: string) => {
+    const mainSlug = mainCategory ? mainCategory.slug : targetCategory.slug;
+    setSelectedSubcat(subSlug);
     setSelectedSubSubcat('all');
+    setCurrentPage(1);
+
+    if (typeof window !== 'undefined') {
+      const newUrl = subSlug === 'all' ? `/category/${mainSlug}` : `/category/${mainSlug}/${subSlug}`;
+      window.history.pushState(null, '', newUrl);
+    }
   };
 
   return (

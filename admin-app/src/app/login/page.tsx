@@ -7,8 +7,8 @@ import { Lock, Mail, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('saitsolutions@gmail.com');
-  const [password, setPassword] = useState('saitsolutions2026');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,7 +29,7 @@ export default function AdminLoginPage() {
 
       const data = await response.json();
       if (response.ok && data.success) {
-        router.push('/admin');
+        router.push('/');
       } else {
         setError(data.error || 'Invalid administrator ID or password');
       }
@@ -41,28 +41,24 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="w-full min-h-[75vh] flex items-center justify-center px-4 py-16 text-slate-800">
-      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md p-8 shadow-xl space-y-6">
+    <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center px-4 py-16 text-slate-100">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-8 shadow-2xl space-y-6">
         
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <Image
-            src="/logo.png"
-            alt="Sait Solutions Logo"
-            width={140}
-            height={45}
-            className="object-contain mx-auto mb-4 filter brightness-95"
-          />
-          <h1 className="text-xl font-extrabold text-slate-900">Admin Store Portal</h1>
-          <p className="text-xs text-slate-500 font-medium leading-relaxed">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center mx-auto mb-3 font-black text-xl">
+            SA
+          </div>
+          <h1 className="text-xl font-extrabold text-white">SA IT Solutions - Admin Portal</h1>
+          <p className="text-xs text-slate-400 font-medium leading-relaxed">
             Enter administrator credentials to access inventory, manage categories, and handle customer enquiries.
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="bg-rose-50 border border-rose-200 text-rose-600 p-3 rounded-lg flex items-center gap-2 text-xs font-semibold">
-            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500" />
+          <div className="bg-rose-950/60 border border-rose-800/80 text-rose-300 p-3 rounded-lg flex items-center gap-2 text-xs font-semibold">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400" />
             <span>{error}</span>
           </div>
         )}
@@ -70,9 +66,9 @@ export default function AdminLoginPage() {
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div className="space-y-1">
-            <label className="block text-slate-600 font-bold mb-1">Admin Email / ID</label>
+            <label className="block text-slate-300 font-bold mb-1">Admin Email / ID</label>
             <div className="relative">
-              <span className="absolute left-3.5 top-3.5 text-slate-400">
+              <span className="absolute left-3.5 top-3.5 text-slate-500">
                 <Mail className="w-4 h-4" />
               </span>
               <input
@@ -81,15 +77,15 @@ export default function AdminLoginPage() {
                 placeholder="saitsolutions@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-600 focus:bg-white transition-all shadow-sm font-medium"
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all shadow-sm font-medium"
               />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="block text-slate-600 font-bold mb-1">Password</label>
+            <label className="block text-slate-300 font-bold mb-1">Password</label>
             <div className="relative">
-              <span className="absolute left-3.5 top-3.5 text-slate-400">
+              <span className="absolute left-3.5 top-3.5 text-slate-500">
                 <Lock className="w-4 h-4" />
               </span>
               <input
@@ -98,12 +94,12 @@ export default function AdminLoginPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-purple-600 focus:bg-white transition-all shadow-sm font-medium"
+                className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-10 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all shadow-sm font-medium"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-700"
+                className="absolute right-3.5 top-3.5 text-slate-500 hover:text-slate-300"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -113,19 +109,11 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-purple-700 to-indigo-800 text-white rounded-xl py-3.5 hover:brightness-110 transition-all font-bold text-xs uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-md shadow-purple-900/10 mt-2"
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl py-3.5 hover:brightness-110 transition-all font-bold text-xs uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-lg shadow-indigo-900/30 mt-2"
           >
             {isSubmitting ? 'Authenticating...' : 'Sign In to Admin Dashboard'}
           </button>
         </form>
-
-        <div className="bg-purple-50/60 border border-purple-100 rounded-xl p-3 text-center text-[11px] text-purple-900 space-y-1 font-medium">
-          <div><strong>Authorized Admin Credentials:</strong></div>
-          <div className="flex justify-center gap-3 text-[10px] text-purple-800">
-            <span>ID: <code className="bg-white px-1.5 py-0.5 rounded border border-purple-200 font-bold">saitsolutions@gmail.com</code></span>
-            <span>Pass: <code className="bg-white px-1.5 py-0.5 rounded border border-purple-200 font-bold">saitsolutions2026</code></span>
-          </div>
-        </div>
       </div>
     </div>
   );

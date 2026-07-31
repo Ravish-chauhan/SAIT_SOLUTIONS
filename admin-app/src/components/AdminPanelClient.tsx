@@ -124,9 +124,27 @@ export default function AdminPanelClient({
     subcategoryId: '',
     subsubcategoryId: '',
     imagesInput: '',
-    specsInput: 'Warranty : 1 Year\nCondition : Brand New',
+    specsInput: '',
     isTrending: false,
   });
+
+  // Key-Value Pair Specification Rows State
+  const [specRows, setSpecRows] = useState<{ id: string; key: string; value: string }[]>([
+    { id: '1', key: 'Warranty', value: '1 Year' },
+    { id: '2', key: 'Condition', value: 'Brand New' },
+  ]);
+
+  const addSpecRow = () => {
+    setSpecRows((prev) => [...prev, { id: String(Date.now()), key: '', value: '' }]);
+  };
+
+  const updateSpecRow = (id: string, field: 'key' | 'value', text: string) => {
+    setSpecRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: text } : r)));
+  };
+
+  const removeSpecRow = (id: string) => {
+    setSpecRows((prev) => prev.filter((r) => r.id !== id));
+  };
 
   // Category Form State
   const [categoryForm, setCategoryForm] = useState({
@@ -139,6 +157,64 @@ export default function AdminPanelClient({
 
   const [isUploadingCloudinary, setIsUploadingCloudinary] = useState(false);
 
+  const compressFileToWebP = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      if (file.type === 'image/webp' || file.type === 'image/gif' || file.type === 'image/svg+xml') {
+        resolve(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const MAX_SIZE = 1200;
+
+          if (width > MAX_SIZE || height > MAX_SIZE) {
+            if (width > height) {
+              height = Math.round((height * MAX_SIZE) / width);
+              width = MAX_SIZE;
+            } else {
+              width = Math.round((width * MAX_SIZE) / height);
+              height = MAX_SIZE;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(file);
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                resolve(file);
+                return;
+              }
+              const webpName = file.name.replace(/\.[^/.]+$/, '') + '.webp';
+              const webpFile = new File([blob], webpName, { type: 'image/webp' });
+              resolve(webpFile);
+            },
+            'image/webp',
+            0.85
+          );
+        };
+        img.onerror = () => resolve(file);
+        img.src = event.target?.result as string;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleCloudinaryFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -148,8 +224,9 @@ export default function AdminPanelClient({
 
     try {
       for (let i = 0; i < files.length; i++) {
+        const webpFile = await compressFileToWebP(files[i]);
         const formData = new FormData();
-        formData.append('file', files[i]);
+        formData.append('file', webpFile);
 
         const res = await fetch('/api/admin/upload', {
           method: 'POST',
@@ -169,7 +246,7 @@ export default function AdminPanelClient({
       }
 
       if (successCount > 0) {
-        showToast('success', `${successCount} image(s) uploaded to Cloudinary! ☁️`);
+        showToast('success', `${successCount} WebP image(s) uploaded to Cloudinary! ☁️`);
       }
     } catch (err) {
       showToast('error', 'Error uploading image to Cloudinary.');
@@ -186,8 +263,9 @@ export default function AdminPanelClient({
     setIsUploadingCloudinary(true);
 
     try {
+      const webpFile = await compressFileToWebP(files[0]);
       const formData = new FormData();
-      formData.append('file', files[0]);
+      formData.append('file', webpFile);
 
       const res = await fetch('/api/admin/upload', {
         method: 'POST',
@@ -197,7 +275,7 @@ export default function AdminPanelClient({
       const data = await res.json();
       if (res.ok && data.success && data.url) {
         setCategoryForm((prev) => ({ ...prev, image: data.url }));
-        showToast('success', 'Category image uploaded to Cloudinary! ☁️');
+        showToast('success', 'Category WebP image uploaded to Cloudinary! ☁️');
       } else {
         showToast('error', data.error || 'Cloudinary upload failed.');
       }
@@ -212,6 +290,35 @@ export default function AdminPanelClient({
   const showToast = (type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
     setTimeout(() => setNotification(null), 4000);
+  };
+
+  const getCategoryProductCount = (catId: string) => {
+    const childIds: string[] = [];
+    const collectChildren = (targetId: string) => {
+      categories.forEach((c) => {
+        if (!c.parent) return;
+        const pid = typeof c.parent === 'object' ? c.parent._id : c.parent;
+        if (String(pid) === String(targetId)) {
+          childIds.push(c._id);
+          collectChildren(c._id);
+        }
+      });
+    };
+    collectChildren(catId);
+
+    const allCatIds = [catId, ...childIds];
+
+    return products.filter((p) => {
+      const pCat = typeof p.category === 'object' ? (p.category as any)?._id : p.category;
+      const pSub = typeof p.subcategory === 'object' ? (p.subcategory as any)?._id : p.subcategory;
+      const pSubSub = typeof p.subsubcategory === 'object' ? (p.subsubcategory as any)?._id : p.subsubcategory;
+
+      return (
+        (pCat && allCatIds.includes(String(pCat))) ||
+        (pSub && allCatIds.includes(String(pSub))) ||
+        (pSubSub && allCatIds.includes(String(pSubSub)))
+      );
+    }).length;
   };
 
   const handleLogout = async () => {
@@ -278,14 +385,11 @@ export default function AdminPanelClient({
     setIsSubmitting(true);
 
     const specsMap: Record<string, string> = {};
-    if (typeof productForm.specsInput === 'string') {
-      productForm.specsInput.split('\n').forEach((line) => {
-        const parts = line.split(':');
-        if (parts.length >= 2) {
-          specsMap[parts[0].trim()] = parts.slice(1).join(':').trim();
-        }
-      });
-    }
+    specRows.forEach((row) => {
+      if (row.key.trim() && row.value.trim()) {
+        specsMap[row.key.trim()] = row.value.trim();
+      }
+    });
 
     const imagesArray = productForm.imagesInput
       ? productForm.imagesInput.split('\n').map((u) => u.trim()).filter((u) => u.length > 0)
@@ -329,9 +433,13 @@ export default function AdminPanelClient({
           subcategoryId: '',
           subsubcategoryId: '',
           imagesInput: '',
-          specsInput: 'Warranty : 1 Year\nCondition : Brand New',
+          specsInput: '',
           isTrending: false,
         });
+        setSpecRows([
+          { id: '1', key: 'Warranty', value: '1 Year' },
+          { id: '2', key: 'Condition', value: 'Brand New' },
+        ]);
         router.refresh();
       } else {
         showToast('error', data.error || 'Failed to create product');
@@ -350,14 +458,11 @@ export default function AdminPanelClient({
     setIsSubmitting(true);
 
     const specsMap: Record<string, string> = {};
-    if (typeof productForm.specsInput === 'string') {
-      productForm.specsInput.split('\n').forEach((line) => {
-        const parts = line.split(':');
-        if (parts.length >= 2) {
-          specsMap[parts[0].trim()] = parts.slice(1).join(':').trim();
-        }
-      });
-    }
+    specRows.forEach((row) => {
+      if (row.key.trim() && row.value.trim()) {
+        specsMap[row.key.trim()] = row.value.trim();
+      }
+    });
 
     const imagesArray = productForm.imagesInput
       ? productForm.imagesInput.split('\n').map((u) => u.trim()).filter((u) => u.length > 0)
@@ -426,11 +531,11 @@ export default function AdminPanelClient({
     const subId = typeof prod.subcategory === 'object' ? prod.subcategory?._id : prod.subcategory;
     const subsubId = typeof prod.subsubcategory === 'object' ? prod.subsubcategory?._id : prod.subsubcategory;
 
-    const specsText = prod.specs
-      ? Object.entries(prod.specs)
-          .map(([k, v]) => `${k} : ${v}`)
-          .join('\n')
-      : '';
+    const initialRows = prod.specs && Object.keys(prod.specs).length > 0
+      ? Object.entries(prod.specs).map(([k, v], idx) => ({ id: String(idx + 1), key: k, value: v }))
+      : [{ id: '1', key: 'Warranty', value: '1 Year' }, { id: '2', key: 'Condition', value: 'Brand New' }];
+
+    setSpecRows(initialRows);
 
     setProductForm({
       name: prod.name,
@@ -443,7 +548,7 @@ export default function AdminPanelClient({
       subcategoryId: subId || '',
       subsubcategoryId: subsubId || '',
       imagesInput: (prod.images || []).join('\n'),
-      specsInput: specsText,
+      specsInput: '',
       isTrending: prod.isTrending || false,
     });
   };
@@ -777,7 +882,7 @@ export default function AdminPanelClient({
                   onChange={(e) => setSelectedCategoryFilter(e.target.value)}
                   className="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500 font-medium"
                 >
-                  <option value="all">All Categories ({parentCategories.length} Main)</option>
+                  <option value="all">All Categories ({products.length} Products)</option>
                   {parentCategories.map((main) => {
                     const subs = categories.filter((sub) => {
                       if (!sub.parent) return false;
@@ -785,10 +890,12 @@ export default function AdminPanelClient({
                       return String(pid) === String(main._id);
                     });
 
+                    const mainCount = getCategoryProductCount(main._id);
+
                     return (
                       <React.Fragment key={main._id}>
                         <option value={main._id} className="font-bold text-purple-300">
-                          📂 {main.name}
+                          📂 {main.name} ({mainCount} items)
                         </option>
                         {subs.map((sub) => {
                           const subsubs = categories.filter((ss) => {
@@ -797,16 +904,21 @@ export default function AdminPanelClient({
                             return String(pid) === String(sub._id);
                           });
 
+                          const subCount = getCategoryProductCount(sub._id);
+
                           return (
                             <React.Fragment key={sub._id}>
                               <option value={sub._id} className="text-slate-200">
-                                &nbsp;&nbsp;↳ {sub.name}
+                                &nbsp;&nbsp;↳ {sub.name} ({subCount} items)
                               </option>
-                              {subsubs.map((ss) => (
-                                <option key={ss._id} value={ss._id} className="text-slate-400">
-                                  &nbsp;&nbsp;&nbsp;&nbsp;• {ss.name}
-                                </option>
-                              ))}
+                              {subsubs.map((ss) => {
+                                const ssCount = getCategoryProductCount(ss._id);
+                                return (
+                                  <option key={ss._id} value={ss._id} className="text-slate-400">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;• {ss.name} ({ssCount} items)
+                                  </option>
+                                );
+                              })}
                             </React.Fragment>
                           );
                         })}
@@ -998,6 +1110,9 @@ export default function AdminPanelClient({
                             <span className="bg-purple-900/40 text-purple-300 border border-purple-700/40 text-[10px] font-bold px-2 py-0.5 rounded-md">
                               Level 1 (Main)
                             </span>
+                            <span className="bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 text-[10px] font-black px-2 py-0.5 rounded-md">
+                              {getCategoryProductCount(mainCat._id)} Products
+                            </span>
                           </div>
                           <p className="text-xs text-slate-400 font-mono">slug: /category/{mainCat.slug}</p>
                         </div>
@@ -1053,6 +1168,9 @@ export default function AdminPanelClient({
                                   <span className="bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 text-[9px] font-bold px-2 py-0.2 rounded">
                                     Level 2
                                   </span>
+                                  <span className="bg-indigo-950 text-indigo-300 border border-indigo-700/50 text-[9px] font-extrabold px-2 py-0.2 rounded">
+                                    {getCategoryProductCount(subCat._id)} Products
+                                  </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -1089,8 +1207,8 @@ export default function AdminPanelClient({
                                       className="bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg flex items-center gap-2 text-xs"
                                     >
                                       <span className="text-slate-300 font-semibold">{subSubCat.name}</span>
-                                      <span className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.2 rounded font-mono">
-                                        L3
+                                      <span className="text-[9px] bg-slate-800 text-purple-300 px-1.5 py-0.2 rounded font-mono font-bold">
+                                        {getCategoryProductCount(subSubCat._id)} Items
                                       </span>
                                       <button
                                         onClick={() => openEditCategoryModal(subSubCat)}
@@ -1365,13 +1483,16 @@ export default function AdminPanelClient({
               </div>
 
               <div className="space-y-1">
-                <label className="block text-slate-300 font-bold">Product Description</label>
+                <div className="flex justify-between items-center">
+                  <label className="block text-slate-300 font-bold">Product Description (Main Tab)</label>
+                  <span className="text-[10px] text-purple-400 font-medium">Supports paragraphs, - bullet points, & **bold text**</span>
+                </div>
                 <textarea
-                  rows={2}
-                  placeholder="Detailed specs and overview..."
+                  rows={4}
+                  placeholder={`Write detailed product description here...\n\n- Ultra-fast 1ms wireless connectivity\n- **Customizable RGB** backlighting per key\n- Quiet and responsive key switches`}
                   value={productForm.description}
                   onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 font-sans text-xs leading-relaxed"
                 />
               </div>
 
@@ -1401,15 +1522,57 @@ export default function AdminPanelClient({
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-slate-300 font-bold">Technical Specs (Key : Value per line)</label>
-                <textarea
-                  rows={3}
-                  placeholder="Warranty : 1 Year&#10;Connectivity : Bluetooth / 2.4GHz"
-                  value={productForm.specsInput}
-                  onChange={(e) => setProductForm({ ...productForm, specsInput: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 font-mono text-[11px]"
-                />
+              {/* Technical Specifications Key-Value Row Editor */}
+              <div className="space-y-2.5 bg-slate-950/70 border border-slate-800 p-4 rounded-xl">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                  <div className="flex items-center gap-2">
+                    <label className="block text-slate-300 font-bold">Technical Specifications</label>
+                    <span className="text-[10px] text-emerald-400 font-medium bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">
+                      Structured Key-Value Pairs
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={addSpecRow}
+                    className="bg-indigo-900/60 hover:bg-indigo-800 text-indigo-200 border border-indigo-700/50 text-[11px] font-bold px-3 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add Spec Row</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
+                  {specRows.length === 0 ? (
+                    <p className="text-slate-500 italic text-[11px]">No specification rows added yet. Click "+ Add Spec Row" above.</p>
+                  ) : (
+                    specRows.map((row) => (
+                      <div key={row.id} className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          placeholder="Spec Name e.g. Warranty"
+                          value={row.key}
+                          onChange={(e) => updateSpecRow(row.id, 'key', e.target.value)}
+                          className="w-1/2 bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 font-medium"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Value e.g. 2 Years"
+                          value={row.value}
+                          onChange={(e) => updateSpecRow(row.id, 'value', e.target.value)}
+                          className="w-1/2 bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 font-medium"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeSpecRow(row.id)}
+                          className="p-1.5 bg-slate-800 hover:bg-rose-950 text-slate-400 hover:text-rose-300 rounded-lg transition-colors cursor-pointer shrink-0"
+                          title="Remove specification row"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">

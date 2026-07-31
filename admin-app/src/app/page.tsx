@@ -14,9 +14,9 @@ export default async function AdminDashboard() {
   const cookieStore = await cookies();
   const token = cookieStore.get('sait_admin_token');
 
-  // Route protection
+  // Route protection - Redirect to login if unauthenticated
   if (token?.value !== 'authenticated_session_hash_sait_solutions') {
-    redirect('/admin/login');
+    redirect('/login');
   }
 
   let products: any[] = [];
@@ -26,7 +26,6 @@ export default async function AdminDashboard() {
   try {
     await dbConnect();
 
-    // Ensure Category schema is registered prior to populate queries
     categories = await Category.find({})
       .sort({ name: 1 })
       .lean();
@@ -42,13 +41,10 @@ export default async function AdminDashboard() {
       .sort({ createdAt: -1 })
       .lean();
 
-    console.log('ADMIN DASHBOARD SERVER FETCH CATEGORIES LIST:', categories.map(c => ({ id: c._id, name: c.name })));
-    console.log('ADMIN DASHBOARD SERVER FETCH COUNT:', categories.length);
   } catch (error) {
     console.error("Database error in admin dashboard:", error);
   }
 
-  // Safely serialize database documents for Client Component rendering
   const serializedProducts = JSON.parse(JSON.stringify(products));
   const serializedEnquiries = JSON.parse(JSON.stringify(enquiries));
   const serializedCategories = JSON.parse(JSON.stringify(categories));
