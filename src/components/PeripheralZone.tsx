@@ -133,7 +133,7 @@ export default function PeripheralZone() {
           {/* Background Image Container - Clear Image without white gradient overlay */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="/peripheral_zone.png"
+              src="/peripheral_zone.webp"
               alt="Peripheral Zone Studio Background"
               fill
               className="object-cover object-left lg:object-center pointer-events-none opacity-100"

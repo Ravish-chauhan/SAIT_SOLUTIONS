@@ -102,7 +102,7 @@ export default function SideBySideBanners() {
             {/* Top Banner Image Box (Banner 1 Image on Top Only) */}
             <div className="relative w-full h-[180px] sm:h-[210px] p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
               <Image
-                src="/sideby-banner1.png"
+                src="/sideby-banner1.webp"
                 alt="Work & Productivity Studio Setup"
                 fill
                 className="object-cover object-center pointer-events-none"
@@ -178,7 +178,7 @@ export default function SideBySideBanners() {
             {/* Top Banner Image Box (Banner 2 Image on Top Only) */}
             <div className="relative w-full h-[180px] sm:h-[210px] p-5 sm:p-7 flex flex-col justify-between overflow-hidden">
               <Image
-                src="/sideby-banner2.png"
+                src="/sideby-banner2.webp"
                 alt="Network & Security Setup"
                 fill
                 className="object-cover object-[center_65%] pointer-events-none"

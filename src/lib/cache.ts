@@ -100,7 +100,10 @@ export const getCachedCategoryPageData = unstable_cache(
   async (slug: string) => {
     try {
       await dbConnect();
-      const targetCategory = await Category.findOne({ slug }).lean();
+      let targetCategory = await Category.findOne({ slug }).lean();
+      if (!targetCategory && (slug === 'networking' || slug === 'security-surveillance')) {
+        targetCategory = await Category.findOne({ slug: 'network-security' }).lean();
+      }
       if (!targetCategory) return null;
 
       let parentCategoryObj: any = null;

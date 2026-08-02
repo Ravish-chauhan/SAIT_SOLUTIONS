@@ -99,16 +99,16 @@ export default function NeedHelpSection() {
           </div>
 
           {/* ======================================================== */}
-          {/* 2. LAPTOP / DESKTOP DESIGN (Matching Reference Image)    */}
+          {/* 2. TABLET & DESKTOP DESIGN (768px, 1024px, 1280px+)       */}
           {/* ======================================================== */}
-          <div className="hidden md:grid md:grid-cols-12 gap-6 items-center divide-x divide-purple-200/60">
+          <div className="hidden md:grid md:grid-cols-12 gap-4 xl:gap-6 items-center divide-y md:divide-y-0 lg:divide-x divide-purple-200/60">
             
-            {/* Col 1: Heading & Subtitle (4 cols) */}
-            <div className="md:col-span-4 pr-4">
-              <span className="text-xs font-black uppercase text-[#6d28d9] tracking-widest block mb-1">
+            {/* Col 1: Heading & Subtitle */}
+            <div className="md:col-span-12 lg:col-span-4 lg:pr-4 pb-4 md:pb-0">
+              <span className="text-[11px] font-black uppercase text-[#6d28d9] tracking-widest block mb-1">
                 NEED HELP?
               </span>
-              <h3 className="text-xl lg:text-2xl font-extrabold text-slate-900 leading-tight tracking-tight font-sans mb-1.5">
+              <h3 className="text-lg lg:text-xl xl:text-2xl font-extrabold text-slate-900 leading-snug tracking-tight font-sans mb-1">
                 Can’t find the product you’re looking for?
               </h3>
               <p className="text-xs text-slate-500 font-medium">
@@ -116,53 +116,54 @@ export default function NeedHelpSection() {
               </p>
             </div>
 
-            {/* Col 2: Call Us (3 cols) */}
-            <div className="md:col-span-3 pl-6 pr-4 flex items-center gap-3.5 group">
-              <div className="w-11 h-11 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
-                <Phone className="w-5 h-5" />
+            {/* Col 2: Call Us */}
+            <div className="md:col-span-6 lg:col-span-3 pt-4 md:pt-0 lg:pl-5 lg:pr-3 flex items-center gap-3 group">
+              <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
+                <Phone className="w-4.5 h-4.5 lg:w-5 lg:h-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <span className="text-xs font-extrabold text-slate-900 block leading-tight mb-0.5">
                   Call Us
                 </span>
                 <a
                   href="tel:+919369991770"
-                  className="text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight"
+                  className="text-xs lg:text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight truncate"
                 >
                   +91 9369991770
                 </a>
-                <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
+                <span className="text-[10.5px] text-slate-500 font-medium block mt-0.5">
                   Mon - Sat (9AM - 7PM)
                 </span>
               </div>
             </div>
 
-            {/* Col 3: Email Us (3 cols) */}
-            <div className="md:col-span-3 pl-6 pr-4 flex items-center gap-3.5 group">
-              <div className="w-11 h-11 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
-                <Mail className="w-5 h-5" />
+            {/* Col 3: Email Us */}
+            <div className="md:col-span-6 lg:col-span-3 pt-4 md:pt-0 lg:pl-5 lg:pr-3 flex items-center gap-3 group">
+              <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-purple-200/60 text-[#6d28d9] flex items-center justify-center shrink-0 group-hover:bg-[#6d28d9] group-hover:text-white transition-all">
+                <Mail className="w-4.5 h-4.5 lg:w-5 lg:h-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <span className="text-xs font-extrabold text-slate-900 block leading-tight mb-0.5">
                   Email Us
                 </span>
                 <a
                   href="mailto:sales@saitsolutions.co.in"
-                  className="text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight"
+                  className="text-xs lg:text-xs xl:text-sm font-extrabold text-[#6d28d9] hover:underline block leading-tight truncate"
+                  title="sales@saitsolutions.co.in"
                 >
                   sales@saitsolutions.co.in
                 </a>
-                <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
+                <span className="text-[10.5px] text-slate-500 font-medium block mt-0.5">
                   We reply within 24h
                 </span>
               </div>
             </div>
 
-            {/* Col 4: Still need help? CTA Button (2 cols) */}
-            <div className="md:col-span-2 pl-6 flex flex-col justify-center items-start space-y-2">
+            {/* Col 4: Still need help? CTA Button */}
+            <div className="md:col-span-12 lg:col-span-2 pt-4 lg:pt-0 lg:pl-5 flex flex-row lg:flex-col justify-between lg:justify-center items-center lg:items-start gap-2">
               <div>
                 <h4 className="text-xs font-extrabold text-slate-900">Still need help?</h4>
-                <p className="text-[11px] text-slate-500 font-medium leading-tight mt-0.5">
+                <p className="text-[10.5px] text-slate-500 font-medium leading-tight mt-0.5">
                   Our experts are ready to assist.
                 </p>
               </div>
@@ -170,7 +171,7 @@ export default function NeedHelpSection() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border-2 border-[#6d28d9] bg-white hover:bg-purple-50 text-[#6d28d9] font-extrabold text-xs transition-all shadow-sm active:scale-95 cursor-pointer mt-1"
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border-2 border-[#6d28d9] bg-white hover:bg-purple-50 text-[#6d28d9] font-extrabold text-xs transition-all shadow-sm active:scale-95 cursor-pointer shrink-0"
               >
                 <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                 <span>Chat on WhatsApp</span>

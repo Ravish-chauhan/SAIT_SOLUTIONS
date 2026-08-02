@@ -49,7 +49,7 @@ export default function Footer() {
             <Link href="/" className="inline-flex items-center gap-3 group">
               <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center p-1 shrink-0">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="SA Monogram"
                   width={28}
                   height={28}

@@ -51,10 +51,16 @@ export default function CategoriesCarousel() {
       link: '/category/monitors-display',
     },
     {
-      title: 'Network & Security',
-      description: 'CCTV cameras, smart routers, switches, and remote access systems.',
+      title: 'Networking',
+      description: 'Smart routers, switches, access points, and enterprise network systems.',
       image: '/category/network and security.jpg',
-      link: '/category/network-security',
+      link: '/category/networking',
+    },
+    {
+      title: 'Security & Surveillance',
+      description: 'HD CCTV cameras, NVRs, DVRs, smart security & access systems.',
+      image: '/category/security.webp',
+      link: '/category/security-surveillance',
     },
     {
       title: 'Accessories',
@@ -74,7 +80,7 @@ export default function CategoriesCarousel() {
             {/* Banner Card 1 */}
             <Link href="/category/peripherals" className="relative aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
               <Image
-                src="/short-banner01.png"
+                src="/short-banner01.webp"
                 alt="Promo Banner 1"
                 fill
                 className="object-cover"
@@ -86,7 +92,7 @@ export default function CategoriesCarousel() {
             {/* Banner Card 2 */}
             <Link href="/category/monitors-display" className="relative aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
               <Image
-                src="/short-banner02.png"
+                src="/short-banner02.webp"
                 alt="Promo Banner 2"
                 fill
                 className="object-cover"
@@ -98,7 +104,7 @@ export default function CategoriesCarousel() {
             {/* Banner Card 3 */}
             <Link href="/category/peripherals" className="relative aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
               <Image
-                src="/short-banner03.png"
+                src="/short-banner03.webp"
                 alt="Promo Banner 3"
                 fill
                 className="object-cover"
@@ -110,7 +116,7 @@ export default function CategoriesCarousel() {
             {/* Banner Card 4 (Visible only on mobile to make it 2x2 grid, hidden on desktop/tablet where it is 1x3 grid) */}
             <Link href="/category/pc-components" className="relative md:hidden aspect-[1717/916] w-full overflow-hidden border border-slate-200/50 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300 group cursor-pointer bg-slate-50">
               <Image
-                src="/short-banner04.png"
+                src="/short-banner04.webp"
                 alt="Promo Banner 4"
                 fill
                 className="object-cover"
@@ -155,16 +161,16 @@ export default function CategoriesCarousel() {
               <ChevronRight className="w-5 h-5 text-slate-700" />
             </button>
 
-            {/* Grid/Flex: Horizontally scrollable row with ref & smooth scroll */}
+            {/* Carousel Flex Track: Horizontally scrollable row showing 6 cards in frame on desktop */}
             <div
               ref={categoryScrollRef}
-              className="flex lg:grid lg:grid-cols-6 overflow-x-auto lg:overflow-x-visible scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3.5 sm:gap-5 snap-x snap-mandatory pb-4 lg:pb-0 scroll-smooth px-1"
+              className="flex overflow-x-auto scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-3.5 sm:gap-5 snap-x snap-mandatory pt-3 pb-6 px-1 scroll-smooth"
             >
               {categories.map((cat, index) => (
                 <Link
                   key={index}
                   href={cat.link}
-                  className="bg-[#FFFFFF] rounded-xl border border-[#ECEEF3] shadow-[0_8px_30px_rgba(15,23,42,0.05)] hover:shadow-md hover:scale-[1.02] transition-all duration-300 flex flex-col items-center justify-between group cursor-pointer p-4 flex-shrink-0 w-[160px] sm:w-[185px] lg:w-auto snap-start"
+                  className="bg-[#FFFFFF] rounded-xl border border-[#ECEEF3] shadow-[0_8px_30px_rgba(15,23,42,0.05)] hover:shadow-md hover:scale-[1.02] transition-all duration-300 flex flex-col items-center justify-between group cursor-pointer p-4 flex-shrink-0 w-[160px] sm:w-[185px] lg:w-[calc((100%-5rem)/5)] xl:w-[calc((100%-6.25rem)/6)] snap-start"
                 >
                   {/* Image Box */}
                   <div className="w-full h-[115px] md:h-[130px] relative flex items-center justify-center">

@@ -12,6 +12,8 @@ export async function generateStaticParams() {
     { slug: 'peripherals' },
     { slug: 'monitors-display' },
     { slug: 'network-security' },
+    { slug: 'networking' },
+    { slug: 'security-surveillance' },
     { slug: 'accessories' },
   ];
 }

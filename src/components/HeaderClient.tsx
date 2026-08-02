@@ -117,7 +117,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
         {/* Center: Complete Centered Logo */}
         <Link href="/" className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 select-none shrink-0 group">
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="SA Monogram"
             width={32}
             height={32}
@@ -179,7 +179,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
         {/* Logo (Monogram + Divider + Text) */}
         <Link href="/" className="flex items-center gap-3 shrink-0 group ml-4 md:ml-8">
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="SA Monogram"
             width={54}
             height={54}
@@ -248,14 +248,14 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
       </header>
 
       {/* ROW 3: Sticky Categories Ribbon */}
-      <div className="hidden lg:flex sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm w-full h-[52px] px-4 md:px-8 items-center justify-between">
+      <div className="hidden lg:flex sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm w-full h-[52px] px-4 md:px-8 items-center justify-between overflow-hidden">
         
         {/* Left: Browse All Categories Button & Separator */}
-        <div className="flex items-stretch h-full shrink-0 ml-4 md:ml-8">
-          <div className="relative h-full flex items-stretch w-[280px]" ref={dropdownRef}>
+        <div className="flex items-stretch h-full shrink-0 ml-2 md:ml-4 lg:ml-6">
+          <div className="relative h-full flex items-stretch w-auto min-w-[200px] lg:w-[220px] xl:w-[260px]" ref={dropdownRef}>
             <button
               onClick={handleToggleDropdown}
-              className="relative group h-full w-full flex items-center gap-2 text-slate-800 font-extrabold text-xs cursor-pointer pl-6 pr-6 transition-all"
+              className="relative group h-full w-full flex items-center gap-2 text-slate-800 font-extrabold text-xs cursor-pointer pl-4 pr-4 transition-all"
             >
               {/* Expanding top border line from center on hover */}
               <span className="absolute top-0 left-0 right-0 h-[2px] bg-brand-purple-light scale-x-0 group-hover:scale-x-100 opacity-0 group-hover:opacity-100 transition-all duration-300 origin-center" />
@@ -323,10 +323,10 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
         </div>
 
         {/* Center: Main Ribbon Navigation Links with Dropdown Arrows */}
-        <nav className="hidden lg:flex flex-grow justify-center items-center gap-6 text-xs font-bold text-slate-655 h-full">
+        <nav className="hidden lg:flex flex-grow justify-center items-center gap-2 lg:gap-3.5 xl:gap-6 text-[11px] xl:text-xs font-bold text-slate-655 h-full px-2">
           <Link 
             href="/" 
-            className={`relative hover:text-[#5b21b6] transition-colors py-4 flex items-center h-full ${
+            className={`relative hover:text-[#5b21b6] transition-colors py-4 flex items-center h-full whitespace-nowrap ${
               isHome ? 'text-[#5b21b6] font-extrabold' : 'text-slate-600'
             }`}
           >
@@ -339,7 +339,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
           {/* OUR STORE - Placed right next to Home */}
           <Link 
             href="/categories" 
-            className={`relative hover:text-[#5b21b6] transition-colors py-4 flex items-center h-full ${
+            className={`relative hover:text-[#5b21b6] transition-colors py-4 flex items-center h-full whitespace-nowrap ${
               pathname === '/categories' ? 'text-[#5b21b6] font-extrabold' : 'text-slate-600'
             }`}
           >
@@ -349,34 +349,34 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
             )}
           </Link>
           
-          <Link href="/category/pc-components" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
+          <Link href="/category/pc-components" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full whitespace-nowrap">
             <span>PC Components</span>
             <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/storage-nas" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
+          <Link href="/category/storage-nas" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full whitespace-nowrap">
             <span>Storage & NAS</span>
             <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/peripherals" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
+          <Link href="/category/peripherals" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full whitespace-nowrap">
             <span>Peripherals</span>
             <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/monitors-display" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
+          <Link href="/category/monitors-display" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full whitespace-nowrap">
             <span>Monitors & Projectors</span>
             <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
           
-          <Link href="/category/network-security" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full">
+          <Link href="/category/network-security" className="hover:text-[#5b21b6] transition-colors flex items-center gap-1 group py-4 h-full whitespace-nowrap">
             <span>Network & Security</span>
             <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-[#5b21b6] transition-colors" />
           </Link>
         </nav>
 
-        {/* Right Spacer to mathematically balance the centered navigation links */}
-        <div className="hidden lg:block w-[280px] shrink-0 h-full" />
+        {/* Right Spacer (Only on xl screens where width allows) */}
+        <div className="hidden xl:block w-[260px] shrink-0 h-full" />
       </div>
 
       {/* Mobile Sidebar Drawer (Smooth slide animation, logo-free header, no admin link) */}
@@ -387,7 +387,7 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
             <div className="flex justify-between items-center pb-4 border-b border-slate-100 mb-5">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 select-none shrink-0 group">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="SA Monogram"
                   width={28}
                   height={28}

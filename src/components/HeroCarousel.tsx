@@ -65,7 +65,7 @@ export default function HeroCarousel() {
       titleAccent: 'Build It Your Way',
       subtitle: 'Choose premium components and create a PC tailored for gaming, work or creation.',
       ctaText: 'BUILD YOUR PC →',
-      link: '/category/pc-components',
+      link: '/custom-pc',
       imagePath: 'https://res.cloudinary.com/gjcmtip1/image/upload/v1785424063/custom-pc_dwz4cy.webp',
     },
   ];
