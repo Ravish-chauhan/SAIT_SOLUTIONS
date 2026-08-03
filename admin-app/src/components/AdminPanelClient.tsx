@@ -60,7 +60,9 @@ interface EnquiryData {
   productName: string;
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
   message?: string;
+  status?: 'Pending' | 'Contacted' | 'Closed';
   createdAt: string;
 }
 
@@ -328,6 +330,25 @@ export default function AdminPanelClient({
       router.refresh();
     } catch (err) {
       console.error('Logout error:', err);
+    }
+  };
+
+  const handleUpdateEnquiryStatus = async (id: string, newStatus: string) => {
+    try {
+      const res = await fetch('/api/admin/enquiries', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status: newStatus }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setEnquiries(enquiries.map((e) => (e._id === id ? { ...e, status: newStatus as any } : e)));
+        showToast('success', `Enquiry status updated to ${newStatus}`);
+      } else {
+        showToast('error', data.error || 'Failed to update status');
+      }
+    } catch (err) {
+      showToast('error', 'Error updating enquiry status');
     }
   };
 
@@ -1243,11 +1264,21 @@ export default function AdminPanelClient({
         {/* TAB 3: ENQUIRIES */}
         {activeTab === 'enquiries' && (
           <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl">
-              <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">
-                Customer Quote Requests & Enquiries
-              </h3>
-              <p className="text-xs text-slate-400">Direct WhatsApp and form inquiries submitted by prospective buyers</p>
+            <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">
+                  Customer Queries & Quote Requests
+                </h3>
+                <p className="text-xs text-slate-400">Homepage form queries and WhatsApp/product lead entries ({enquiries.length} total)</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-extrabold px-3 py-1 rounded-xl">
+                  {enquiries.filter((e) => (e.status || 'Pending') === 'Pending').length} Pending
+                </span>
+                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-extrabold px-3 py-1 rounded-xl">
+                  {enquiries.filter((e) => e.status === 'Closed').length} Closed
+                </span>
+              </div>
             </div>
 
             <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
@@ -1256,33 +1287,75 @@ export default function AdminPanelClient({
                   <thead className="bg-slate-950/80 text-slate-400 font-extrabold uppercase text-[10px] tracking-wider border-b border-slate-800">
                     <tr>
                       <th className="py-3.5 px-4">Date</th>
-                      <th className="py-3.5 px-4">Product Requested</th>
-                      <th className="py-3.5 px-4">Customer Name</th>
+                      <th className="py-3.5 px-4">Customer Name & Contact</th>
                       <th className="py-3.5 px-4">Phone Number</th>
+                      <th className="py-3.5 px-4">Topic / Product</th>
                       <th className="py-3.5 px-4">Message / Requirements</th>
+                      <th className="py-3.5 px-4 text-right">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/80">
                     {enquiries.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="py-8 text-center text-slate-500">
-                          No inquiries received yet.
+                        <td colSpan={6} className="py-8 text-center text-slate-500">
+                          No inquiries or queries received yet.
                         </td>
                       </tr>
                     ) : (
                       enquiries.map((enq) => (
                         <tr key={enq._id} className="hover:bg-slate-800/50 transition-colors">
-                          <td className="py-3 px-4 text-slate-400 text-[11px]">
+                          <td className="py-3 px-4 text-slate-400 text-[11px] whitespace-nowrap">
                             {new Date(enq.createdAt).toLocaleDateString()}
+                            <span className="block text-[10px] text-slate-500">
+                              {new Date(enq.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
                           </td>
-                          <td className="py-3 px-4 font-bold text-white">{enq.productName}</td>
-                          <td className="py-3 px-4 font-semibold text-slate-200">{enq.customerName}</td>
-                          <td className="py-3 px-4 font-bold text-purple-300">
-                            <a href={`tel:${enq.customerPhone}`} className="hover:underline">
+                          <td className="py-3 px-4">
+                            <div className="font-extrabold text-white">{enq.customerName}</div>
+                            {enq.customerEmail && (
+                              <a href={`mailto:${enq.customerEmail}`} className="text-[11px] text-purple-300 hover:underline block font-medium">
+                                {enq.customerEmail}
+                              </a>
+                            )}
+                          </td>
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <a href={`tel:${enq.customerPhone}`} className="font-bold text-emerald-400 hover:underline block">
                               {enq.customerPhone}
                             </a>
+                            <a
+                              href={`https://wa.me/${enq.customerPhone.replace(/[^0-9]/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-emerald-500 hover:underline block font-semibold mt-0.5"
+                            >
+                              💬 Open WhatsApp
+                            </a>
                           </td>
-                          <td className="py-3 px-4 text-slate-400">{enq.message || 'No additional message provided'}</td>
+                          <td className="py-3 px-4 font-bold text-slate-200">
+                            <span className="bg-purple-950/80 text-purple-200 border border-purple-800/60 px-2.5 py-1 rounded-lg inline-block">
+                              {enq.productName}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 text-slate-300 max-w-xs">
+                            <p className="line-clamp-3">{enq.message || 'No additional message provided'}</p>
+                          </td>
+                          <td className="py-3 px-4 text-right whitespace-nowrap">
+                            <select
+                              value={enq.status || 'Pending'}
+                              onChange={(e) => handleUpdateEnquiryStatus(enq._id, e.target.value)}
+                              className={`text-xs font-extrabold px-2.5 py-1 rounded-xl border focus:outline-none cursor-pointer ${
+                                (enq.status || 'Pending') === 'Pending'
+                                  ? 'bg-amber-950/80 text-amber-300 border-amber-700/50'
+                                  : enq.status === 'Contacted'
+                                  ? 'bg-indigo-950/80 text-indigo-300 border-indigo-700/50'
+                                  : 'bg-emerald-950/80 text-emerald-300 border-emerald-700/50'
+                              }`}
+                            >
+                              <option value="Pending">⏳ Pending</option>
+                              <option value="Contacted">📞 Contacted</option>
+                              <option value="Closed">✅ Closed</option>
+                            </select>
+                          </td>
                         </tr>
                       ))
                     )}

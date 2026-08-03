@@ -6,17 +6,21 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     const body = await request.json();
-    const { productName, productUrl, customerName, customerPhone, message } = body;
+    const { productName, productUrl, customerName, customerPhone, customerEmail, message, subject } = body;
 
-    if (!productName || !productUrl || !customerName || !customerPhone) {
-      return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
+    const finalProductName = productName || subject || 'General Homepage Query';
+    const finalProductUrl = productUrl || '/';
+
+    if (!customerName || !customerPhone) {
+      return NextResponse.json({ success: false, error: 'Name and Phone Number are required' }, { status: 400 });
     }
 
     const enquiry = await Enquiry.create({
-      productName,
-      productUrl,
+      productName: finalProductName,
+      productUrl: finalProductUrl,
       customerName,
       customerPhone,
+      customerEmail: customerEmail || undefined,
       message,
       status: 'Pending',
     });

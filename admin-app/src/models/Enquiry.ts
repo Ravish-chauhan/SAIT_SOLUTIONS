@@ -5,6 +5,7 @@ export interface IEnquiry extends Document {
   productUrl: string;
   customerName: string;
   customerPhone: string;
+  customerEmail?: string;
   message?: string;
   status: 'Pending' | 'Contacted' | 'Closed';
   createdAt: Date;
@@ -16,6 +17,7 @@ const EnquirySchema: Schema = new Schema(
     productUrl: { type: String, required: true },
     customerName: { type: String, required: true },
     customerPhone: { type: String, required: true },
+    customerEmail: { type: String },
     message: { type: String },
     status: {
       type: String,
