@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
+import { revalidateTag, revalidatePath } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +15,15 @@ export async function POST(request: NextRequest) {
     const tagsToRevalidate: string[] = tags || ['products', 'categories'];
     for (const tag of tagsToRevalidate) {
       revalidateTag(tag, { expire: 0 });
+    }
+
+    // Also bust the Full Route Cache (ISR page-level cache) for affected pages.
+    // revalidateTag only invalidates the data cache (unstable_cache entries),
+    // but the rendered page HTML is cached separately by ISR. We must call
+    // revalidatePath to force re-render on the next visit.
+    if (tagsToRevalidate.includes('categories') || tagsToRevalidate.includes('products')) {
+      // Purge everything: root layout covers all pages + client cache
+      revalidatePath('/', 'layout');
     }
 
     return NextResponse.json({
